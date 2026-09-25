@@ -50,8 +50,9 @@ export default function ExtensionPage() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link href="/app">
-            <Button size="sm" variant="secondary" className="text-xs h-8">
-              Open Web App
+            <Button size="sm" variant="secondary" className="text-xs h-8 px-2 sm:px-3">
+              <span className="sm:hidden">App</span>
+              <span className="hidden sm:inline">Open Web App</span>
             </Button>
           </Link>
         </div>

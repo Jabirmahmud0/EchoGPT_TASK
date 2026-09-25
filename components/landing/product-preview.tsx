@@ -58,27 +58,27 @@ export function ProductPreview() {
             <button
               onClick={() => setActiveTab("workspace")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150",
+                "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150",
                 activeTab === "workspace"
                   ? "bg-emerald-600 text-white shadow-xs"
                   : "text-text-secondary hover:text-foreground hover:bg-surface-elevated"
               )}
             >
-              <MessageSquare className="h-4 w-4" />
-              <span>Web App Workspace (`/app`)</span>
+              <MessageSquare className="h-4 w-4 shrink-0" />
+              <span>Web App <span className="hidden sm:inline">Workspace (`/app`)</span></span>
             </button>
 
             <button
               onClick={() => setActiveTab("extension")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150",
+                "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150",
                 activeTab === "extension"
                   ? "bg-emerald-600 text-white shadow-xs"
                   : "text-text-secondary hover:text-foreground hover:bg-surface-elevated"
               )}
             >
-              <PanelRight className="h-4 w-4" />
-              <span>Browser Extension (`/extension`)</span>
+              <PanelRight className="h-4 w-4 shrink-0" />
+              <span>Extension <span className="hidden sm:inline">Simulation (`/extension`)</span></span>
             </button>
           </div>
         </div>

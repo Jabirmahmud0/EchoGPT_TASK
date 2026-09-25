@@ -320,6 +320,10 @@ export function PricingSection() {
             </p>
           </div>
 
+          <div className="flex items-center justify-end sm:hidden mb-2 text-xs text-text-muted">
+            <span>Scroll horizontally to compare →</span>
+          </div>
+
           <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
             <table className="w-full text-left text-sm border-collapse min-w-[640px]">
               <thead>

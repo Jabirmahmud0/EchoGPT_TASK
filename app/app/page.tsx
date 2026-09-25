@@ -56,7 +56,7 @@ export default function AppPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -66,10 +66,19 @@ export default function AppPage() {
             >
               New Chat
             </Button>
+            <button
+              onClick={() => createNewChat()}
+              className="sm:hidden h-8 w-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors"
+              title="New Chat"
+              aria-label="New Chat"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
 
             <Link href="/extension">
-              <Button variant="secondary" size="sm" className="text-xs h-8">
-                Extension Simulator
+              <Button variant="secondary" size="sm" className="text-xs h-8 px-2.5 sm:px-3">
+                <span className="sm:hidden">Ext</span>
+                <span className="hidden sm:inline">Extension Simulator</span>
               </Button>
             </Link>
           </div>

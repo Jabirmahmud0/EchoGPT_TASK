@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ChatProvider } from "@/lib/chat-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +43,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <ChatProvider>{children}</ChatProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

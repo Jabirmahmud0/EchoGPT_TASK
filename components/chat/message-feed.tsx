@@ -118,10 +118,7 @@ function MessageItem({
 
   return (
     <div className="flex items-start gap-3.5 group">
-      <div
-        className="h-8 w-8 rounded-xl flex items-center justify-center text-white shrink-0 shadow-md mt-0.5"
-        style={{ backgroundColor: modelInfo.accentColor }}
-      >
+      <div className="h-8 w-8 rounded-xl flex items-center justify-center text-emerald-500 bg-surface border border-emerald-500/20 shrink-0 shadow-xs mt-0.5">
         <Sparkles className="h-4 w-4" />
       </div>
 
@@ -213,13 +210,7 @@ function EmptyChatState({
 
   return (
     <div className="h-full flex flex-col items-center justify-center text-center py-12 px-4 max-w-lg mx-auto">
-      <div
-        className="h-14 w-14 rounded-2xl flex items-center justify-center text-white mb-4 shadow-xl"
-        style={{
-          backgroundColor: model.accentColor,
-          boxShadow: `0 8px 30px -4px ${model.accentColor}40`,
-        }}
-      >
+      <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-emerald-500 bg-surface border border-emerald-500/25 mb-4 shadow-sm">
         <Sparkles className="h-7 w-7" />
       </div>
 

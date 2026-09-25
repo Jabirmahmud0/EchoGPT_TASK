@@ -50,17 +50,17 @@ export function ModelSelector({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={cn(
-          "flex items-center gap-2 rounded-xl glass-card transition-all duration-150 border border-border-subtle hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
-          size === "sm" ? "px-2.5 py-1 text-xs" : "px-3.5 py-1.5 text-sm"
+          "flex items-center gap-2 rounded-xl bg-surface border border-emerald-500/25 hover:border-emerald-500/40 text-foreground transition-all duration-150 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+          size === "sm" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm"
         )}
       >
-        <ModelBadge modelId={currentModel.id} size={size === "sm" ? "sm" : "md"} />
-        <span className="text-text-muted text-xs hidden sm:inline">
+        <ModelBadge modelId={currentModel.id} size={size === "sm" ? "sm" : "md"} className="border-0 bg-transparent shadow-none p-0" />
+        <span className="text-text-muted text-xs font-mono font-medium hidden sm:inline">
           {currentModel.contextWindow}
         </span>
         <ChevronDown
           className={cn(
-            "h-3.5 w-3.5 text-text-secondary transition-transform duration-200",
+            "h-3.5 w-3.5 text-text-secondary transition-transform duration-200 ml-0.5",
             isOpen && "rotate-180"
           )}
         />
@@ -74,7 +74,7 @@ export function ModelSelector({
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.15 }}
             role="listbox"
-            className="absolute left-0 z-50 mt-2 w-72 sm:w-80 rounded-2xl glass-card p-2 shadow-2xl border border-border-strong space-y-1 focus:outline-none"
+            className="absolute left-0 z-50 mt-2 w-72 sm:w-80 rounded-2xl bg-surface p-2 shadow-xl border border-border space-y-1 focus:outline-none"
           >
             <div className="px-2.5 py-1.5 text-[11px] font-semibold text-text-muted uppercase tracking-wider">
               Available AI Models
@@ -95,7 +95,7 @@ export function ModelSelector({
                   className={cn(
                     "w-full flex items-start gap-3 p-2.5 rounded-xl transition-colors text-left",
                     isSelected
-                      ? "bg-primary/10 border border-primary/20"
+                      ? "bg-primary/10 border border-primary/25"
                       : "hover:bg-surface-elevated border border-transparent"
                   )}
                 >
@@ -119,7 +119,7 @@ export function ModelSelector({
                       <span>{model.contextWindow}</span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <Zap className="h-2.5 w-2.5 text-amber-400" />
+                        <Zap className="h-2.5 w-2.5 text-emerald-500" />
                         {model.speed}
                       </span>
                     </div>

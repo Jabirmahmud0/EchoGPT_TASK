@@ -11,7 +11,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/80 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-md shadow-primary/20">
+            <div className="h-8 w-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
               <Sparkles className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-lg tracking-tight">EchoGPT</span>

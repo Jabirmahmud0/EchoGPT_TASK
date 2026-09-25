@@ -130,7 +130,7 @@ export function Sidebar({
         <div className="h-16 px-4 flex items-center justify-between border-b border-border-subtle shrink-0">
           {!isCollapsed && (
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-md shadow-primary/20">
+              <div className="h-8 w-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col">

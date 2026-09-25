@@ -9,6 +9,8 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ArrowLeft, Sparkles, MessageSquare, Compass, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { PopupShell } from "@/components/extension/popup-shell";
+
 export default function ExtensionPage() {
   const [layout, setLayout] = useState<ExtensionLayout>("popup");
   const [view, setView] = useState<ExtensionView>("chat");
@@ -74,7 +76,7 @@ export default function ExtensionPage() {
             </p>
           </div>
 
-          {/* Scaffold Container (Populated in Task 3.2 and 3.3) */}
+          {/* Interactive Extension Viewport */}
           <div
             id="extension-viewport"
             className={cn(
@@ -83,17 +85,7 @@ export default function ExtensionPage() {
             )}
           >
             {layout === "popup" ? (
-              <div className="w-full max-w-[380px] h-[560px] rounded-2xl bg-surface border border-border shadow-xl flex flex-col items-center justify-center p-6 text-center text-xs text-text-secondary">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <div className="font-semibold text-foreground text-sm mb-1">
-                  Popup View Container
-                </div>
-                <p className="text-[11px] text-text-muted max-w-[260px]">
-                  Scaffolded in Task 3.1. Ready for Task 3.2 interactive prompt input and quick actions dispatch.
-                </p>
-              </div>
+              <PopupShell onViewChange={setView} />
             ) : (
               <div className="w-full min-h-[520px] rounded-2xl bg-surface border border-border shadow-lg flex flex-col items-center justify-center p-8 text-center text-xs text-text-secondary">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">

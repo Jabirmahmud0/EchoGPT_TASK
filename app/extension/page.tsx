@@ -10,6 +10,7 @@ import { ArrowLeft, Sparkles, MessageSquare, Compass, ExternalLink } from "lucid
 import { cn } from "@/lib/utils";
 
 import { PopupShell } from "@/components/extension/popup-shell";
+import { SidebarShell } from "@/components/extension/sidebar-shell";
 
 export default function ExtensionPage() {
   const [layout, setLayout] = useState<ExtensionLayout>("popup");
@@ -87,17 +88,7 @@ export default function ExtensionPage() {
             {layout === "popup" ? (
               <PopupShell onViewChange={setView} />
             ) : (
-              <div className="w-full min-h-[520px] rounded-2xl bg-surface border border-border shadow-lg flex flex-col items-center justify-center p-8 text-center text-xs text-text-secondary">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <div className="font-semibold text-foreground text-sm mb-1">
-                  Sidebar View Container
-                </div>
-                <p className="text-[11px] text-text-muted max-w-sm">
-                  Scaffolded in Task 3.1. Ready for Task 3.3 live mock article split with docked sidebar.
-                </p>
-              </div>
+              <SidebarShell onViewChange={setView} />
             )}
           </div>
         </div>

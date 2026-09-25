@@ -1,25 +1,53 @@
 "use client";
 
-import React, { useRef } from "react";
-import { Clock, User, Bookmark, Share2 } from "lucide-react";
+import React from "react";
+import { Clock, User, Bookmark, Share2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MockArticleProps {
   className?: string;
   articleRef?: React.RefObject<HTMLDivElement | null>;
   onMouseUp?: () => void;
+  onSelectSnippet?: (text: string) => void;
 }
 
-export function MockArticle({ className, articleRef, onMouseUp }: MockArticleProps) {
+export function MockArticle({
+  className,
+  articleRef,
+  onMouseUp,
+  onSelectSnippet,
+}: MockArticleProps) {
   return (
     <article
       ref={articleRef}
       onMouseUp={onMouseUp}
       className={cn(
-        "prose prose-sm dark:prose-invert max-w-none text-foreground select-text",
+        "prose prose-sm dark:prose-invert max-w-none text-foreground select-text relative",
         className
       )}
     >
+      {/* Interactive Selection Guide Hint */}
+      <div className="mb-4 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-wrap items-center justify-between gap-2 not-prose">
+        <div className="flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 font-medium">
+          <Sparkles className="h-4 w-4 text-emerald-500 shrink-0" />
+          <span>
+            Highlight any text in this article to trigger the floating{" "}
+            <strong className="text-foreground font-semibold">Ask EchoGPT ✨</strong> chip.
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() =>
+            onSelectSnippet?.(
+              "Decoupling the presentation tier from upstream LLM inference cuts operational expenses by up to 42% while providing failover redundancy."
+            )
+          }
+          className="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors font-medium whitespace-nowrap shadow-xs"
+        >
+          Sample Highlight
+        </button>
+      </div>
+
       {/* Category & Read Time */}
       <div className="flex items-center gap-2 text-[11px] font-medium text-emerald-600 mb-2">
         <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
@@ -83,12 +111,23 @@ export function MockArticle({ className, articleRef, onMouseUp }: MockArticlePro
         </p>
 
         {/* Highlighted Quote Box */}
-        <div className="my-4 p-3.5 rounded-xl bg-surface-elevated/70 border-l-4 border-emerald-500 not-prose">
+        <div
+          onClick={() =>
+            onSelectSnippet?.(
+              "Decoupling the presentation tier from upstream LLM inference cuts operational expenses by up to 42% while providing failover redundancy when provider outages occur."
+            )
+          }
+          className="my-4 p-3.5 rounded-xl bg-surface-elevated/70 border-l-4 border-emerald-500 hover:border-emerald-400 not-prose cursor-pointer transition-colors group"
+          title="Click to test EchoGPT selection explain"
+        >
           <p className="italic text-xs text-foreground leading-relaxed font-sans">
             &ldquo;Decoupling the presentation tier from upstream LLM inference cuts operational expenses by up to 42% while providing failover redundancy when provider outages occur.&rdquo;
           </p>
-          <span className="block mt-1 text-[11px] text-text-muted font-medium">
-            — Cloud Infrastructure Report, Q3 2026
+          <span className="block mt-1 text-[11px] text-text-muted font-medium flex items-center justify-between">
+            <span>— Cloud Infrastructure Report, Q3 2026</span>
+            <span className="text-emerald-600 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 font-sans">
+              <Sparkles className="h-3 w-3" /> Click to Explain
+            </span>
           </span>
         </div>
 

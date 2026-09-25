@@ -73,6 +73,11 @@ export function SidebarShell({
   const [isOpen, setIsOpen] = useState(true);
   const [prompt, setPrompt] = useState(initialPrompt);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [selectionChip, setSelectionChip] = useState<{
+    text: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -99,6 +104,75 @@ export function SidebarShell({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Handle mouseup inside article to detect text selection
+  const handleArticleMouseUp = () => {
+    setTimeout(() => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed) {
+        setSelectionChip(null);
+        return;
+      }
+
+      const text = selection.toString().trim();
+      if (!text || text.length < 3) {
+        setSelectionChip(null);
+        return;
+      }
+
+      if (
+        articleContainerRef.current &&
+        articleContainerRef.current.contains(selection.anchorNode)
+      ) {
+        try {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          const containerRect = articleContainerRef.current.getBoundingClientRect();
+
+          const scrollLeft = articleContainerRef.current.scrollLeft;
+          const scrollTop = articleContainerRef.current.scrollTop;
+
+          const rawX = rect.left - containerRect.left + scrollLeft + rect.width / 2;
+          const rawY = rect.top - containerRect.top + scrollTop - 42;
+
+          const clampedX = Math.max(90, Math.min(rawX, containerRect.width - 90));
+          const clampedY = Math.max(12, rawY);
+
+          setSelectionChip({
+            text,
+            x: clampedX,
+            y: clampedY,
+          });
+        } catch {
+          setSelectionChip(null);
+        }
+      } else {
+        setSelectionChip(null);
+      }
+    }, 10);
+  };
+
+  const handleExplainSelection = (text: string) => {
+    setPrompt(`Explain: "${text}"`);
+    if (!isOpen) setIsOpen(true);
+    setSelectionChip(null);
+    window.getSelection()?.removeAllRanges();
+
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 120);
+  };
+
+  const handleSummarizeSelection = (text: string) => {
+    setPrompt(`Summarize this passage: "${text}"`);
+    if (!isOpen) setIsOpen(true);
+    setSelectionChip(null);
+    window.getSelection()?.removeAllRanges();
+
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 120);
+  };
 
   // Auto-resize textarea
   useEffect(() => {
@@ -227,9 +301,53 @@ export function SidebarShell({
         {/* Left Pane: In-page Simulated DOM Content */}
         <div
           ref={articleContainerRef}
-          className="flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-surface-elevated/20 scrollbar-thin"
+          onMouseUp={handleArticleMouseUp}
+          className="relative flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-surface-elevated/20 scrollbar-thin select-text"
         >
-          <MockArticle />
+          {/* Floating 'Ask EchoGPT ✨' chip on highlighted text */}
+          <AnimatePresence>
+            {selectionChip && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 4 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 4 }}
+                transition={{ duration: 0.12 }}
+                style={{
+                  position: "absolute",
+                  left: `${selectionChip.x}px`,
+                  top: `${selectionChip.y}px`,
+                  transform: "translateX(-50%)",
+                  zIndex: 40,
+                }}
+                className="flex items-center gap-1.5 p-1 rounded-xl bg-surface/95 backdrop-blur-md border border-emerald-500/40 shadow-xl select-none"
+              >
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => handleExplainSelection(selectionChip.text)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-xs transition-colors"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Ask EchoGPT</span>
+                </button>
+
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => handleSummarizeSelection(selectionChip.text)}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-surface-elevated hover:bg-surface text-text-secondary hover:text-foreground text-xs font-medium border border-border transition-colors"
+                  title="Summarize selected text"
+                >
+                  <span>Summarize</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <MockArticle
+            onMouseUp={handleArticleMouseUp}
+            onSelectSnippet={handleExplainSelection}
+          />
         </div>
 
         {/* Right Pane: Docked EchoGPT Extension Sidebar */}

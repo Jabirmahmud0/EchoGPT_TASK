@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/chat/sidebar";
 import { ModelSelector } from "@/components/chat/model-selector";
 import { useChat } from "@/lib/chat-context";
 import { Button } from "@/components/ui/button";
+import { MessageFeed } from "@/components/chat/message-feed";
 import { PanelLeft, Sparkles, MessageSquare, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -64,24 +65,9 @@ export default function AppPage() {
           </div>
         </header>
 
-        {/* Temporary Chat Stage Placeholder (Will be completed in Task 2.4 & 2.5) */}
-        <main className="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
-          <div className="max-w-md w-full text-center space-y-4 glass-card p-8 rounded-2xl border border-border-subtle">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center mx-auto shadow-lg shadow-primary/25">
-              <Sparkles className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold text-foreground">
-                {activeConversation?.title || "EchoGPT Workspace"}
-              </h2>
-              <p className="text-xs text-text-secondary mt-1">
-                Sidebar connected with persistent sessions and date grouping.
-              </p>
-            </div>
-            <div className="text-[11px] text-text-muted p-2 rounded-xl bg-surface-elevated">
-              Active Session: <span className="font-mono text-primary">{activeConversation?.id}</span>
-            </div>
-          </div>
+        {/* Chat Message Feed */}
+        <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+          <MessageFeed />
         </main>
       </div>
     </div>

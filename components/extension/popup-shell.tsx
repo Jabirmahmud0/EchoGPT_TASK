@@ -9,6 +9,8 @@ import { MODELS } from "@/lib/models";
 import { ModelSelector } from "@/components/chat/model-selector";
 import { ModelBadge } from "@/components/chat/model-badge";
 import { MarkdownRenderer } from "@/components/chat/markdown-renderer";
+import { ExtensionHistory } from "./extension-history";
+import { ExtensionSettings } from "./extension-settings";
 import { cn } from "@/lib/utils";
 import {
   Sparkles,
@@ -91,6 +93,7 @@ export function PopupShell({
     selectChat,
   } = useChat();
 
+  const [view, setView] = useState<ExtensionView>("chat");
   const [prompt, setPrompt] = useState(initialPrompt);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -178,55 +181,71 @@ export function PopupShell({
         className
       )}
     >
-      {/* 1. Extension Header Bar */}
-      <header className="h-12 border-b border-border bg-surface px-3 flex items-center justify-between shrink-0 z-10">
-        <div className="flex items-center gap-2">
-          <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="h-3.5 w-3.5" />
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-bold text-xs tracking-tight text-foreground">
-              EchoGPT
-            </span>
-            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Active
-            </span>
-          </div>
-        </div>
-
-        {/* Header Action Icons */}
-        <div className="flex items-center gap-1 text-text-secondary">
-          <button
-            onClick={() => onViewChange?.("history")}
-            title="Chat History"
-            aria-label="View history"
-            className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+      <AnimatePresence mode="wait">
+        {view === "chat" ? (
+          <motion.div
+            key="chat"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.16 }}
+            className="flex-1 flex flex-col min-h-0 overflow-hidden"
           >
-            <History className="h-4 w-4" />
-          </button>
+            {/* 1. Extension Header Bar */}
+            <header className="h-12 border-b border-border bg-surface px-3 flex items-center justify-between shrink-0 z-10">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-xs tracking-tight text-foreground">
+                    EchoGPT
+                  </span>
+                  <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Active
+                  </span>
+                </div>
+              </div>
 
-          <button
-            onClick={() => onViewChange?.("settings")}
-            title="Extension Settings"
-            aria-label="View settings"
-            className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+              {/* Header Action Icons */}
+              <div className="flex items-center gap-1 text-text-secondary">
+                <button
+                  onClick={() => {
+                    setView("history");
+                    onViewChange?.("history");
+                  }}
+                  title="Chat History"
+                  aria-label="View history"
+                  className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                >
+                  <History className="h-4 w-4" />
+                </button>
 
-          <Link
-            href="/app"
-            title="Open Full Web App"
-            aria-label="Open web app"
-            className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Link>
-        </div>
-      </header>
+                <button
+                  onClick={() => {
+                    setView("settings");
+                    onViewChange?.("settings");
+                  }}
+                  title="Extension Settings"
+                  aria-label="View settings"
+                  className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                >
+                  <Settings className="h-4 w-4" />
+                </button>
 
-      {/* 2. Model Selector & Simulated Tab Context Strip */}
+                <Link
+                  href="/app"
+                  title="Open Full Web App"
+                  aria-label="Open web app"
+                  className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </Link>
+              </div>
+            </header>
+
+            {/* 2. Model Selector & Simulated Tab Context Strip */}
       <div className="px-3 py-2 border-b border-border-subtle bg-surface-elevated/40 flex items-center justify-between gap-2 shrink-0">
         <ModelSelector
           selectedModelId={activeModelId}
@@ -298,7 +317,10 @@ export function PopupShell({
                     Recent Conversation
                   </span>
                   <button
-                    onClick={() => onViewChange?.("history")}
+                    onClick={() => {
+                      setView("history");
+                      onViewChange?.("history");
+                    }}
                     className="hover:text-foreground text-[10px] lowercase transition-colors"
                   >
                     view all
@@ -459,6 +481,41 @@ export function PopupShell({
           <span className="font-mono">Shift+Enter newline</span>
         </div>
       </footer>
-    </div>
-  );
+    </motion.div>
+  ) : view === "history" ? (
+    <motion.div
+      key="history"
+      initial={{ opacity: 0, x: 16 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -16 }}
+      transition={{ duration: 0.16 }}
+      className="flex-1 flex flex-col min-h-0 overflow-hidden"
+    >
+      <ExtensionHistory
+        onBack={() => {
+          setView("chat");
+          onViewChange?.("chat");
+        }}
+      />
+    </motion.div>
+  ) : (
+    <motion.div
+      key="settings"
+      initial={{ opacity: 0, x: 16 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -16 }}
+      transition={{ duration: 0.16 }}
+      className="flex-1 flex flex-col min-h-0 overflow-hidden"
+    >
+      <ExtensionSettings
+        onBack={() => {
+          setView("chat");
+          onViewChange?.("chat");
+        }}
+      />
+    </motion.div>
+  )}
+</AnimatePresence>
+</div>
+);
 }

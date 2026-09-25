@@ -10,6 +10,8 @@ import { ModelSelector } from "@/components/chat/model-selector";
 import { ModelBadge } from "@/components/chat/model-badge";
 import { MarkdownRenderer } from "@/components/chat/markdown-renderer";
 import { MockArticle } from "./mock-article";
+import { ExtensionHistory } from "./extension-history";
+import { ExtensionSettings } from "./extension-settings";
 import { cn } from "@/lib/utils";
 import {
   Sparkles,
@@ -71,6 +73,7 @@ export function SidebarShell({
   } = useChat();
 
   const [isOpen, setIsOpen] = useState(true);
+  const [view, setView] = useState<ExtensionView>("chat");
   const [prompt, setPrompt] = useState(initialPrompt);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectionChip, setSelectionChip] = useState<{
@@ -360,60 +363,76 @@ export function SidebarShell({
               transition={{ duration: 0.25, ease: "easeInOut" }}
               className="w-full md:w-[380px] lg:w-[420px] border-t md:border-t-0 md:border-l border-border bg-surface flex flex-col h-[520px] md:h-auto shrink-0 shadow-lg relative z-10"
             >
-              {/* Sidebar Header Bar */}
-              <header className="h-12 border-b border-border px-3.5 flex items-center justify-between shrink-0 bg-surface">
-                <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-                    <Sparkles className="h-3.5 w-3.5" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-xs tracking-tight text-foreground block">
-                      EchoGPT Sidebar
-                    </span>
-                  </div>
-                  <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-text-muted bg-surface-elevated border border-border">
-                    Ctrl+Shift+E
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1 text-text-secondary">
-                  <button
-                    onClick={() => onViewChange?.("history")}
-                    title="History"
-                    aria-label="View history"
-                    className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+              <AnimatePresence mode="wait">
+                {view === "chat" ? (
+                  <motion.div
+                    key="sidebar-chat"
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 16 }}
+                    transition={{ duration: 0.16 }}
+                    className="flex-1 flex flex-col min-h-0 overflow-hidden"
                   >
-                    <History className="h-4 w-4" />
-                  </button>
+                    {/* Sidebar Header Bar */}
+                    <header className="h-12 border-b border-border px-3.5 flex items-center justify-between shrink-0 bg-surface">
+                      <div className="flex items-center gap-2">
+                        <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                          <Sparkles className="h-3.5 w-3.5" />
+                        </div>
+                        <div>
+                          <span className="font-bold text-xs tracking-tight text-foreground block">
+                            EchoGPT Sidebar
+                          </span>
+                        </div>
+                        <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-text-muted bg-surface-elevated border border-border">
+                          Ctrl+Shift+E
+                        </span>
+                      </div>
 
-                  <button
-                    onClick={() => onViewChange?.("settings")}
-                    title="Settings"
-                    aria-label="View settings"
-                    className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
-                  >
-                    <Settings className="h-4 w-4" />
-                  </button>
+                      <div className="flex items-center gap-1 text-text-secondary">
+                        <button
+                          onClick={() => {
+                            setView("history");
+                            onViewChange?.("history");
+                          }}
+                          title="History"
+                          aria-label="View history"
+                          className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                        >
+                          <History className="h-4 w-4" />
+                        </button>
 
-                  <Link
-                    href="/app"
-                    title="Open Full Web App"
-                    aria-label="Open web app"
-                    className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </Link>
+                        <button
+                          onClick={() => {
+                            setView("settings");
+                            onViewChange?.("settings");
+                          }}
+                          title="Settings"
+                          aria-label="View settings"
+                          className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                        >
+                          <Settings className="h-4 w-4" />
+                        </button>
 
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    title="Dock / Collapse Sidebar"
-                    aria-label="Collapse sidebar"
-                    className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
-                  >
-                    <PanelRightClose className="h-4 w-4" />
-                  </button>
-                </div>
-              </header>
+                        <Link
+                          href="/app"
+                          title="Open Full Web App"
+                          aria-label="Open web app"
+                          className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+
+                        <button
+                          onClick={() => setIsOpen(false)}
+                          title="Dock / Collapse Sidebar"
+                          aria-label="Collapse sidebar"
+                          className="p-1.5 rounded-lg hover:text-foreground hover:bg-surface-elevated transition-colors"
+                        >
+                          <PanelRightClose className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </header>
 
               {/* Sub-header: Model Selector & Page Context status */}
               <div className="px-3 py-2 border-b border-border-subtle bg-surface-elevated/40 flex items-center justify-between gap-2 shrink-0">
@@ -570,7 +589,42 @@ export function SidebarShell({
                   <span className="font-mono">Ctrl+Shift+E toggles</span>
                 </div>
               </footer>
-            </motion.aside>
+            </motion.div>
+          ) : view === "history" ? (
+            <motion.div
+              key="sidebar-history"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.16 }}
+              className="flex-1 flex flex-col min-h-0 overflow-hidden"
+            >
+              <ExtensionHistory
+                onBack={() => {
+                  setView("chat");
+                  onViewChange?.("chat");
+                }}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="sidebar-settings"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.16 }}
+              className="flex-1 flex flex-col min-h-0 overflow-hidden"
+            >
+              <ExtensionSettings
+                onBack={() => {
+                  setView("chat");
+                  onViewChange?.("chat");
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.aside>
           )}
         </AnimatePresence>
 

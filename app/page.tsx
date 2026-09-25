@@ -1,5 +1,7 @@
 import { LandingNavbar } from "@/components/landing/navbar";
 import { LandingHero } from "@/components/landing/hero";
+import { FeaturesBento } from "@/components/landing/features-bento";
+import { ModelsRibbon } from "@/components/landing/models-ribbon";
 
 export default function Home() {
   return (
@@ -11,6 +13,12 @@ export default function Home() {
       <main className="flex-1 flex flex-col">
         {/* Hero Section */}
         <LandingHero />
+
+        {/* Features Bento Grid */}
+        <FeaturesBento />
+
+        {/* Supported AI Models Ribbon */}
+        <ModelsRibbon />
       </main>
     </div>
   );

@@ -4,6 +4,9 @@ import { FeaturesBento } from "@/components/landing/features-bento";
 import { ModelsRibbon } from "@/components/landing/models-ribbon";
 import { ProductPreview } from "@/components/landing/product-preview";
 import { PricingSection } from "@/components/landing/pricing-section";
+import { FaqSection } from "@/components/landing/faq-section";
+import { CtaBanner } from "@/components/landing/cta-banner";
+import { LandingFooter } from "@/components/landing/footer";
 
 export default function Home() {
   return (
@@ -27,7 +30,16 @@ export default function Home() {
 
         {/* Value Matrix & Pricing Section */}
         <PricingSection />
+
+        {/* FAQ & Social Proof Testimonials */}
+        <FaqSection />
+
+        {/* Final Conversion CTA Banner */}
+        <CtaBanner />
       </main>
+
+      {/* Marketing Footer */}
+      <LandingFooter />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { LandingHero } from "@/components/landing/hero";
 import { FeaturesBento } from "@/components/landing/features-bento";
 import { ModelsRibbon } from "@/components/landing/models-ribbon";
 import { ProductPreview } from "@/components/landing/product-preview";
+import { PricingSection } from "@/components/landing/pricing-section";
 
 export default function Home() {
   return (
@@ -23,6 +24,9 @@ export default function Home() {
 
         {/* Product Preview Section */}
         <ProductPreview />
+
+        {/* Value Matrix & Pricing Section */}
+        <PricingSection />
       </main>
     </div>
   );

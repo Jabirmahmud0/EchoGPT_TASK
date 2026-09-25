@@ -2,6 +2,7 @@ import { LandingNavbar } from "@/components/landing/navbar";
 import { LandingHero } from "@/components/landing/hero";
 import { FeaturesBento } from "@/components/landing/features-bento";
 import { ModelsRibbon } from "@/components/landing/models-ribbon";
+import { ProductPreview } from "@/components/landing/product-preview";
 
 export default function Home() {
   return (
@@ -19,6 +20,9 @@ export default function Home() {
 
         {/* Supported AI Models Ribbon */}
         <ModelsRibbon />
+
+        {/* Product Preview Section */}
+        <ProductPreview />
       </main>
     </div>
   );

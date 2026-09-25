@@ -136,7 +136,11 @@ function MessageItem({
         </div>
 
         {/* Message Card */}
-        <div className="p-4 sm:p-5 rounded-2xl glass-card border border-border-subtle text-foreground text-sm shadow-sm relative">
+        <div
+          aria-live="polite"
+          aria-atomic="false"
+          className="p-4 sm:p-5 rounded-2xl glass-card border border-border-subtle text-foreground text-sm shadow-sm relative"
+        >
           <MarkdownRenderer content={message.content} />
 
           {/* Typewriter pulse cursor while streaming */}
@@ -149,7 +153,8 @@ function MessageItem({
             <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border-subtle/60 text-text-muted text-xs">
               <button
                 onClick={handleCopyMessage}
-                className="flex items-center gap-1 hover:text-foreground transition-colors p-1 rounded hover:bg-surface-elevated"
+                aria-label="Copy entire response"
+                className="flex items-center gap-1 hover:text-foreground transition-colors p-1 rounded hover:bg-surface-elevated focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                 title="Copy entire response"
               >
                 {copied ? (
@@ -167,7 +172,8 @@ function MessageItem({
 
               <button
                 onClick={onRegenerate}
-                className="flex items-center gap-1 hover:text-foreground transition-colors p-1 rounded hover:bg-surface-elevated"
+                aria-label="Regenerate response with same prompt"
+                className="flex items-center gap-1 hover:text-foreground transition-colors p-1 rounded hover:bg-surface-elevated focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                 title="Regenerate response"
               >
                 <RotateCcw className="h-3.5 w-3.5" />

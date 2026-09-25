@@ -282,8 +282,10 @@ export function SidebarShell({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsOpen((prev) => !prev)}
+            aria-label="Toggle EchoGPT Sidebar"
+            aria-expanded={isOpen}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all shadow-xs",
+              "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500",
               isOpen
                 ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
                 : "bg-surface border border-border text-text-secondary hover:text-foreground"

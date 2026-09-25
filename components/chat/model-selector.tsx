@@ -42,15 +42,29 @@ export function ModelSelector({
     };
   }, [isOpen]);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setIsOpen(false);
+    } else if (e.key === "ArrowDown" && !isOpen) {
+      e.preventDefault();
+      setIsOpen(true);
+    }
+  };
+
   return (
-    <div ref={containerRef} className={cn("relative inline-block", className)}>
+    <div
+      ref={containerRef}
+      onKeyDown={handleKeyDown}
+      className={cn("relative inline-block", className)}
+    >
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-label={`Select AI Model, current model is ${currentModel.name}`}
         className={cn(
-          "flex items-center gap-2 rounded-xl bg-surface border border-emerald-500/25 hover:border-emerald-500/40 text-foreground transition-all duration-150 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+          "flex items-center gap-2 rounded-xl bg-surface border border-emerald-500/25 hover:border-emerald-500/40 text-foreground transition-all duration-150 shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500",
           size === "sm" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm"
         )}
       >
@@ -93,7 +107,7 @@ export function ModelSelector({
                     setIsOpen(false);
                   }}
                   className={cn(
-                    "w-full flex items-start gap-3 p-2.5 rounded-xl transition-colors text-left",
+                    "w-full flex items-start gap-3 p-2.5 rounded-xl transition-colors text-left focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500",
                     isSelected
                       ? "bg-primary/10 border border-primary/25"
                       : "hover:bg-surface-elevated border border-transparent"

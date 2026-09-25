@@ -258,27 +258,30 @@ export function Sidebar({
                         <div className="flex items-center gap-1 shrink-0 ml-1">
                           <button
                             onClick={(e) => handleSaveRename(e, chat.id)}
-                            className="p-1 hover:text-emerald-400 text-text-muted"
+                            aria-label="Save new title"
+                            className="p-1 hover:text-emerald-400 text-text-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
                           >
                             <Check className="h-3 w-3" />
                           </button>
                           <button
                             onClick={handleCancelRename}
-                            className="p-1 hover:text-red-400 text-text-muted"
+                            aria-label="Cancel rename"
+                            className="p-1 hover:text-red-400 text-text-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
                           >
                             <X className="h-3 w-3" />
                           </button>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-1">
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity shrink-0 ml-1">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               togglePinChat(chat.id);
                             }}
                             title={chat.isPinned ? "Unpin chat" : "Pin chat"}
+                            aria-label={chat.isPinned ? "Unpin chat" : "Pin chat"}
                             className={cn(
-                              "p-1 rounded hover:bg-surface-hover transition-colors",
+                              "p-1 rounded hover:bg-surface-hover transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500",
                               chat.isPinned ? "text-primary" : "text-text-muted hover:text-foreground"
                             )}
                           >
@@ -288,7 +291,8 @@ export function Sidebar({
                           <button
                             onClick={(e) => handleStartRename(e, chat)}
                             title="Rename chat"
-                            className="p-1 rounded hover:bg-surface-hover text-text-muted hover:text-foreground transition-colors"
+                            aria-label="Rename chat"
+                            className="p-1 rounded hover:bg-surface-hover text-text-muted hover:text-foreground transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                           >
                             <Edit2 className="h-3 w-3" />
                           </button>
@@ -299,7 +303,8 @@ export function Sidebar({
                               deleteChat(chat.id);
                             }}
                             title="Delete chat"
-                            className="p-1 rounded hover:bg-surface-hover text-text-muted hover:text-red-400 transition-colors"
+                            aria-label="Delete chat"
+                            className="p-1 rounded hover:bg-surface-hover text-text-muted hover:text-red-400 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                           >
                             <Trash2 className="h-3 w-3" />
                           </button>
@@ -332,14 +337,16 @@ export function Sidebar({
                 <button
                   onClick={() => setShowSettings(true)}
                   title="Settings"
-                  className="p-1.5 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors"
+                  aria-label="Open workspace settings"
+                  className="p-1.5 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <Settings className="h-4 w-4" />
                 </button>
                 <Link
                   href="/"
                   title="Landing Page"
-                  className="p-1.5 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors"
+                  aria-label="Return to landing page"
+                  className="p-1.5 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <Home className="h-4 w-4" />
                 </Link>
@@ -350,7 +357,9 @@ export function Sidebar({
               <ThemeToggle />
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-2 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors"
+                title="Settings"
+                aria-label="Open workspace settings"
+                className="p-2 rounded-lg text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
               >
                 <Settings className="h-4 w-4" />
               </button>

@@ -72,16 +72,18 @@ export function Modal({
             )}
             role="dialog"
             aria-modal="true"
+            aria-labelledby={title ? "modal-title" : undefined}
+            aria-describedby={description ? "modal-description" : undefined}
           >
             <div className="flex items-center justify-between pb-4 border-b border-border-subtle">
               <div>
                 {title && (
-                  <h2 className="text-lg font-semibold text-foreground">
+                  <h2 id="modal-title" className="text-lg font-semibold text-foreground">
                     {title}
                   </h2>
                 )}
                 {description && (
-                  <p className="text-xs text-text-secondary mt-0.5">
+                  <p id="modal-description" className="text-xs text-text-secondary mt-0.5">
                     {description}
                   </p>
                 )}
@@ -89,7 +91,7 @@ export function Modal({
               <button
                 onClick={onClose}
                 aria-label="Close dialog"
-                className="rounded-lg p-1.5 text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors"
+                className="rounded-lg p-1.5 text-text-secondary hover:text-foreground hover:bg-surface-elevated transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
               >
                 <X className="h-4 w-4" />
               </button>

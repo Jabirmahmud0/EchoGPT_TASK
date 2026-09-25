@@ -3,33 +3,13 @@ import { Sparkles, MessageSquare, PanelRight, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ModelBadge } from "@/components/chat/model-badge";
+import { LandingNavbar } from "@/components/landing/navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* Temporary Navbar Preview */}
-      <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-bold text-lg tracking-tight">EchoGPT</span>
-            <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
-              2.0 Preview
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Link href="/app">
-              <Button size="sm" variant="primary" rightIcon={<ArrowRight className="h-3.5 w-3.5" />}>
-                Launch App
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Sticky Marketing Navbar */}
+      <LandingNavbar />
 
       {/* Hero Preview */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-20 text-center max-w-4xl mx-auto">

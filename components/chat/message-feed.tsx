@@ -81,11 +81,21 @@ function MessageItem({
     }
   };
 
-  const formattedTime = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  }).format(new Date(message.timestamp));
+  const [formattedTime, setFormattedTime] = useState<string>("");
+
+  useEffect(() => {
+    try {
+      setFormattedTime(
+        new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }).format(new Date(message.timestamp))
+      );
+    } catch {
+      // Fallback
+    }
+  }, [message.timestamp]);
 
   if (isUser) {
     return (
@@ -94,7 +104,9 @@ function MessageItem({
           <div className="px-4 py-3 rounded-2xl bg-primary text-white text-sm leading-relaxed shadow-md shadow-primary/10 rounded-tr-sm">
             {message.content}
           </div>
-          <span className="text-[10px] text-text-muted mt-1 mr-1">{formattedTime}</span>
+          <span className="text-[10px] text-text-muted mt-1 mr-1" suppressHydrationWarning>
+            {formattedTime}
+          </span>
         </div>
 
         <div className="h-8 w-8 rounded-xl bg-surface-elevated border border-border-subtle flex items-center justify-center text-text-secondary shrink-0 shadow-sm">
@@ -117,7 +129,7 @@ function MessageItem({
         {/* Header bar with model badge & timestamp */}
         <div className="flex items-center gap-2">
           <ModelBadge modelId={modelId} size="sm" />
-          <span className="text-[11px] text-text-muted">{formattedTime}</span>
+          <span className="text-[11px] text-text-muted" suppressHydrationWarning>{formattedTime}</span>
           {message.isStreaming && (
             <span className="inline-flex items-center gap-1 text-[10px] text-primary font-medium">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-ping" />

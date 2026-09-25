@@ -30,8 +30,8 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
   {
     id: "conv-initial-1",
     title: "Next.js 16 App Router Architecture",
-    createdAt: Date.now() - 3600000 * 2, // 2 hours ago
-    updatedAt: Date.now() - 3600000 * 2,
+    createdAt: 1727258400000,
+    updatedAt: 1727258400000,
     modelId: "claude-3-5-sonnet",
     isPinned: true,
     messages: [
@@ -39,7 +39,7 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
         id: "msg-1-1",
         role: "user",
         content: "What are the core performance advantages of Next.js with React 19 and Turbopack?",
-        timestamp: Date.now() - 3600000 * 2,
+        timestamp: 1727258400000,
       },
       {
         id: "msg-1-2",
@@ -52,22 +52,22 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
 3. **Partial Prerendering (PPR):** Statically shells the page layout while streaming dynamic user widgets concurrently.
 
 This guarantees sub-second First Contentful Paint (FCP) and zero Cumulative Layout Shift (CLS).`,
-        timestamp: Date.now() - 3600000 * 2 + 3000,
+        timestamp: 1727258403000,
       },
     ],
   },
   {
     id: "conv-initial-2",
     title: "Chrome Extension Multi-Model Sidebar",
-    createdAt: Date.now() - 86400000 * 2, // 2 days ago
-    updatedAt: Date.now() - 86400000 * 2,
+    createdAt: 1727172000000,
+    updatedAt: 1727172000000,
     modelId: "gpt-4o",
     messages: [
       {
         id: "msg-2-1",
         role: "user",
         content: "How should an in-page browser sidebar capture DOM context without blocking the main thread?",
-        timestamp: Date.now() - 86400000 * 2,
+        timestamp: 1727172000000,
       },
       {
         id: "msg-2-2",
@@ -79,7 +79,7 @@ This guarantees sub-second First Contentful Paint (FCP) and zero Cumulative Layo
 * Never clone large subtrees synchronously.
 * Communicate via \`chrome.runtime.sendMessage\` with decoupled payload batches.
 * Wrap the docked panel in an isolated Shadow DOM container to prevent host stylesheet leakage.`,
-        timestamp: Date.now() - 86400000 * 2 + 2500,
+        timestamp: 1727172002500,
       },
     ],
   },

@@ -305,7 +305,7 @@ export function SidebarShell({
         <div
           ref={articleContainerRef}
           onMouseUp={handleArticleMouseUp}
-          className="relative flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-surface-elevated/20 scrollbar-thin select-text"
+          className="relative flex-1 min-w-0 md:min-w-[340px] overflow-y-auto p-4 sm:p-6 lg:p-8 bg-surface-elevated/20 scrollbar-thin select-text"
         >
           {/* Floating 'Ask EchoGPT ✨' chip on highlighted text */}
           <AnimatePresence>
@@ -357,11 +357,11 @@ export function SidebarShell({
         <AnimatePresence initial={false}>
           {isOpen && (
             <motion.aside
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="w-full md:w-[380px] lg:w-[420px] border-t md:border-t-0 md:border-l border-border bg-surface flex flex-col h-[520px] md:h-auto shrink-0 shadow-lg relative z-10"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="w-full md:w-[380px] lg:w-[400px] border-t md:border-t-0 md:border-l border-border bg-surface flex flex-col h-[520px] md:h-full shrink-0 shadow-lg relative z-10"
             >
               <AnimatePresence mode="wait">
                 {view === "chat" ? (
@@ -375,21 +375,21 @@ export function SidebarShell({
                   >
                     {/* Sidebar Header Bar */}
                     <header className="h-12 border-b border-border px-3.5 flex items-center justify-between shrink-0 bg-surface">
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs shrink-0">
                           <Sparkles className="h-3.5 w-3.5" />
                         </div>
                         <div>
-                          <span className="font-bold text-xs tracking-tight text-foreground block">
+                          <span className="font-bold text-xs tracking-tight text-foreground block truncate">
                             EchoGPT Sidebar
                           </span>
                         </div>
-                        <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-text-muted bg-surface-elevated border border-border">
+                        <span className="hidden xl:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-text-muted bg-surface-elevated border border-border shrink-0">
                           Ctrl+Shift+E
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1 text-text-secondary">
+                      <div className="flex items-center gap-0.5 text-text-secondary shrink-0">
                         <button
                           onClick={() => {
                             setView("history");

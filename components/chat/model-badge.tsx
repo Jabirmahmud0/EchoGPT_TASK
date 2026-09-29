@@ -17,18 +17,33 @@ export function ModelBadge({
   size = "md",
   className,
 }: ModelBadgeProps) {
-  const model = MODELS[modelId] || MODELS["gpt-4o"];
+  const model = MODELS[modelId] || MODELS["echogpt"];
 
   const getModelIcon = () => {
     switch (model.id) {
-      case "claude-3-5-sonnet":
+      case "echogpt":
         return <Sparkles className="h-3 w-3 text-emerald-500" />;
+      case "deepseek-v4-pro":
+      case "deepseek-r1":
+        return <Cpu className="h-3 w-3 text-indigo-500" />;
+      case "qwen-3-8-plus":
+      case "llama-3-3-70b":
+      case "llama-3-1-70b":
+        return <Layers className="h-3 w-3 text-purple-500" />;
+      case "kimi-3":
+        return <Sparkles className="h-3 w-3 text-sky-500" />;
+      case "gemini-3-8-flash":
+      case "gemini-2-0-pro":
+      case "gemini-1-5-pro":
+        return <Zap className="h-3 w-3 text-blue-500" />;
+      case "gpt-5-6":
+      case "gpt-4-5":
       case "gpt-4o":
         return <Zap className="h-3 w-3 text-emerald-500" />;
-      case "gemini-1-5-pro":
-        return <Layers className="h-3 w-3 text-emerald-500" />;
-      case "llama-3-1-70b":
-        return <Cpu className="h-3 w-3 text-emerald-500" />;
+      case "opus-5-5":
+      case "claude-3-7-sonnet":
+      case "claude-3-5-sonnet":
+        return <Sparkles className="h-3 w-3 text-amber-500" />;
       default:
         return <Sparkles className="h-3 w-3 text-emerald-500" />;
     }

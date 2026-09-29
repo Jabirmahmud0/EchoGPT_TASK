@@ -2,7 +2,19 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Sparkles, ExternalLink, Activity } from "lucide-react";
+import {
+  Sparkles,
+  ExternalLink,
+  Activity,
+  ShieldCheck,
+  Zap,
+  Terminal,
+  Cpu,
+  Layers,
+  Command,
+} from "lucide-react";
+import { MODELS_LIST } from "@/lib/models";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -18,138 +30,186 @@ function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-border bg-stone-100/60 dark:bg-stone-950/80 text-foreground transition-colors">
+    <footer className="border-t border-border bg-stone-100/70 dark:bg-stone-950 text-foreground transition-colors">
+      {/* Real-time Engine Health Telemetry Strip */}
+      <div className="border-b border-border/60 bg-stone-200/40 dark:bg-stone-900/50 py-3 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-semibold text-foreground">Operational Status:</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-mono font-medium">
+              All 7 Frontier Engines 100% Operational &bull; 99.98% SLA
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4 text-muted-foreground font-mono text-[11px]">
+            <span>Router Dispatch: &lt;28ms</span>
+            <span className="hidden sm:inline">&bull;</span>
+            <span className="hidden sm:inline">P99 Latency: 420ms</span>
+            <span>&bull;</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Zero Telemetry Leaks</span>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          {/* Brand Info */}
-          <div className="md:col-span-1 space-y-4">
+        <ScrollReveal yOffset={16} duration={0.48}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 mb-14">
+            {/* Brand Info & Mission (2 cols) */}
+          <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-flex items-center gap-2.5 font-bold text-lg tracking-tight text-foreground">
               <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <span>EchoGPT</span>
+              <span className="font-black text-xl tracking-tight">EchoGPT</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              The unified multi-model intelligence workspace and browser companion. Switch between frontier models mid-conversation with zero tab sprawl.
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-sm">
+              The unified multi-model frontier workspace and browser companion. Switch between frontier models mid-conversation with zero tab sprawl and zero vendor lock-in.
             </p>
 
-            {/* Live Operational Status */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span>All 4 Models Operational</span>
+            <div className="pt-2 flex items-center gap-3">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-lg bg-stone-200/80 dark:bg-stone-800 text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
+                aria-label="GitHub Repository"
+              >
+                <GithubIcon className="w-4 h-4" />
+              </a>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-stone-200/60 dark:bg-stone-900 border border-border text-[11px] font-mono text-muted-foreground">
+                <Command className="w-3 h-3" />
+                <span>Ctrl + K for launcher</span>
+              </div>
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Col 1: Supported Engines */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Product Ecosystem
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Frontier Engines
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-xs">
+              {MODELS_LIST.map((model) => (
+                <li key={model.id}>
+                  <Link
+                    href={`/app?model=${model.id}`}
+                    className="text-muted-foreground hover:text-emerald-500 transition-colors flex items-center justify-between"
+                  >
+                    <span>{model.name}</span>
+                    <span className="text-[10px] font-mono opacity-60">
+                      {model.id === "echogpt" ? "Default" : model.contextWindow.replace(" tokens", "")}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 2: Workspace & Ecosystem */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Ecosystem
+            </h4>
+            <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/app" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  Web App Workspace
+                  Web Workspace (`/app`)
                 </Link>
               </li>
               <li>
                 <Link href="/extension" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  Chrome Extension Simulation
+                  Chrome Extension Demo
                 </Link>
               </li>
               <li>
-                <a href="#features" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  Features Bento
-                </a>
+                <Link href="/#product-preview" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  Dual Consensus Arena
+                </Link>
               </li>
               <li>
-                <a href="#preview" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  Interactive Product Tour
-                </a>
+                <Link href="/#features" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  In-Page Text Highlight
+                </Link>
               </li>
               <li>
-                <a href="#pricing" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  Subscription Plans
-                </a>
+                <Link href="/#why-choose-us" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  Savings Calculator
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Supported Engines */}
+          {/* Col 3: Architecture & Security */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Supported Engines
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Architecture
             </h4>
-            <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>OpenAI GPT-4o</span>
+            <ul className="space-y-2 text-xs">
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                Local-First Encrypted Vault
               </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span>Anthropic Claude 3.5 Sonnet</span>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                Sub-30ms Mesh Router
               </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                <span>Google Gemini 1.5 Pro</span>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                Shadow DOM Encapsulation
               </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                <span>Meta Llama 3.1 70B</span>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                5M Token Context Pipeline
+              </li>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                Zero Data Training Guarantee
               </li>
             </ul>
           </div>
 
-          {/* Assignment & Project Info */}
+          {/* Col 4: Plans & Company */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Assignment &amp; Source
+            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              EchoGPT Platform
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-xs">
               <li>
-                <a
-                  href="https://github.com/Jabirmahmud0/EchoGPT_TASK"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-emerald-500 transition-colors"
-                >
-                  <GithubIcon className="w-4 h-4" />
-                  <span>GitHub Repository</span>
-                  <ExternalLink className="w-3 h-3 text-muted-foreground/60" />
-                </a>
+                <Link href="/#pricing" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  Pricing Plans &amp; Tiers
+                </Link>
               </li>
               <li>
-                <a href="#faq" className="text-muted-foreground hover:text-emerald-500 transition-colors">
-                  FAQ &amp; Architecture
-                </a>
+                <Link href="/#faq" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  Frequently Asked Questions
+                </Link>
               </li>
-              <li className="text-xs text-muted-foreground/80 leading-relaxed pt-1">
-                Candidate submission for the <strong>AppifyDevs</strong> Frontend Software Engineering Internship.
+              <li>
+                <Link href="/#testimonials" className="text-muted-foreground hover:text-emerald-500 transition-colors">
+                  Verified Testimonials
+                </Link>
+              </li>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                API Documentation (v4.8)
+              </li>
+              <li className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                Enterprise BAA &amp; SLA
               </li>
             </ul>
           </div>
         </div>
+        </ScrollReveal>
 
-        {/* Bottom Bar */}
+        {/* Bottom Legal & Copyright Bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>
-            © {new Date().getFullYear()} EchoGPT Ecosystem. Designed with Graphite + Emerald design standard.
+            &copy; {new Date().getFullYear()} EchoGPT Inc. All rights reserved. Built for high-velocity engineering workflows.
           </p>
-          <div className="flex items-center gap-4">
-            <span className="hover:text-foreground transition-colors cursor-pointer">Privacy First</span>
-            <span>•</span>
+
+          <div className="flex items-center gap-6 text-xs">
+            <span className="hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span>
             <span className="hover:text-foreground transition-colors cursor-pointer">Terms of Service</span>
-            <span>•</span>
-            <a
-              href="https://github.com/Jabirmahmud0/EchoGPT_TASK"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-emerald-500 transition-colors"
-            >
-              Source Code
-            </a>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Security Whitepaper</span>
+            <span className="hover:text-foreground transition-colors cursor-pointer">Status Page</span>
           </div>
         </div>
       </div>

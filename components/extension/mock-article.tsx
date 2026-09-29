@@ -107,7 +107,7 @@ export function MockArticle({
           1. The Latency and Intelligence Trade-off
         </h2>
         <p>
-          Not every task requires a heavy reasoning engine. Routine tasks such as text summarization, regex generation, or language translation are efficiently handled by lightweight, low-latency models with sub-50ms token output. Conversely, architectural refactoring and complex logic debugging demand dense reasoning benchmarks like Claude 3.5 Sonnet.
+          Not every task requires a heavy reasoning engine. Routine tasks such as text summarization, regex generation, or language translation are efficiently handled by lightweight, low-latency models with sub-50ms token output. Conversely, architectural refactoring and complex logic debugging demand dense reasoning benchmarks like Opus 5.5 and DeepSeek V4 Pro.
         </p>
 
         {/* Highlighted Quote Box */}

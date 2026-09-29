@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -13,243 +13,279 @@ import {
   Code2,
   FileText,
   Lock,
+  Workflow,
+  Cpu,
+  Layers,
+  CheckCircle2,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import { ModelBadge } from "@/components/chat/model-badge";
+import { cn } from "@/lib/utils";
+import { ScrollReveal, staggerContainer, revealItem } from "@/components/ui/scroll-reveal";
 
 export function FeaturesBento() {
+  const [activeHandoffStep, setActiveHandoffStep] = useState(1);
+  const [simulatedHighlight, setSimulatedHighlight] = useState(false);
+
   return (
-    <section id="features" className="py-20 sm:py-28 bg-background relative select-none">
+    <section id="features" className="py-20 sm:py-28 bg-background relative select-none border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-xs font-semibold mb-3">
+        {/* Section Header with Scroll Reveal */}
+        <ScrollReveal yOffset={18} duration={0.5} className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold mb-3">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Built for Modern Workflows</span>
+            <span>Architecture &amp; Features</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground">
-            A cohesive AI ecosystem.{" "}
+            A cohesive AI operating system.{" "}
             <span className="text-text-secondary font-medium">
               Not another isolated chatbot.
             </span>
           </h2>
           <p className="mt-4 text-sm sm:text-base text-text-secondary leading-relaxed">
-            From focused code synthesis in the full-screen web app to zero-friction
-            DOM reading in the persistent extension drawer, EchoGPT adapts to your exact flow.
+            From deep architectural code synthesis in the full web workspace to instant in-page context extraction inside our persistent browser sidebar.
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* Card 1: Multi-Model Chat Stage (Spans 2 cols on lg) */}
+        {/* Bento Grid with Staggered Scroll Reveal */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
+        >
+          {/* Card 1: Multi-Model Handoff (Spans 2 cols on lg) */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="lg:col-span-2 p-6 sm:p-8 rounded-2xl bg-surface border border-border hover:border-emerald-500/40 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between group overflow-hidden relative"
+            variants={revealItem}
+            className="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-white/80 dark:bg-stone-900/40 border border-stone-200/90 dark:border-white/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-xs hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between group overflow-hidden relative backdrop-blur-md"
           >
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-elevated border border-border text-[11px] font-semibold text-emerald-600 mb-3">
-                <Sparkles className="h-3 w-3" />
-                <span>UNIFIED REASONING</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
+                <Workflow className="h-3 w-3" />
+                <span>ZERO-LOSS HANDOFF</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                Multi-Model Chat Stage with Zero Lost Context
+                Mid-Conversation Model Switching with Zero Context Loss
               </h3>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-xl mb-6">
-                Never start over in a different browser tab. Swap between Claude 3.5
-                Sonnet for complex system design and GPT-4o for rapid syntax validation
-                in the exact same conversation thread.
+                Begin an architectural blueprint with <strong className="text-foreground">EchoGPT</strong>, cross-examine symbolic logic in <strong className="text-foreground">DeepSeek V4 Pro</strong>, and perform code verification in <strong className="text-foreground">Opus 5.5</strong>—all in the exact same conversation thread.
               </p>
             </div>
 
             {/* Interactive Visual Representation */}
-            <div className="p-4 rounded-xl bg-surface-elevated/70 border border-border-subtle space-y-3 font-mono text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border-subtle text-[11px] text-text-muted">
+            <div className="p-4 sm:p-5 rounded-2xl bg-stone-100/70 dark:bg-stone-950/70 border border-stone-200/80 dark:border-white/[0.06] space-y-3 font-mono text-xs backdrop-blur-xs">
+              <div className="flex items-center justify-between pb-2 border-b border-stone-200/70 dark:border-white/[0.06] text-[11px] text-text-muted">
                 <span className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  Active Model Handoff
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Interactive Turn Switcher</span>
                 </span>
-                <span className="text-emerald-600 font-semibold">Live State Sync</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold font-mono text-[10px]">
+                  100% Token Retention
+                </span>
               </div>
 
+              {/* 3 Step Interactive Turns */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-2 rounded-lg bg-surface border border-border text-[11px]">
-                  <div className="flex items-center gap-2">
-                    <ModelBadge modelId="claude-3-5-sonnet" size="sm" />
-                    <span className="text-text-secondary truncate">
-                      Architecture & Database Design
-                    </span>
+                <div
+                  onClick={() => setActiveHandoffStep(1)}
+                  className={cn(
+                    "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer text-xs",
+                    activeHandoffStep === 1
+                      ? "bg-white dark:bg-stone-800/80 border-emerald-500/40 text-foreground shadow-xs ring-1 ring-emerald-500/20"
+                      : "bg-white/60 dark:bg-stone-900/40 border-stone-200 dark:border-white/[0.05] hover:bg-white dark:hover:bg-stone-800/50"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <ModelBadge modelId="echogpt" size="sm" />
+                    <span className="text-foreground font-semibold">Turn 1: Distributed Mesh Architecture</span>
                   </div>
-                  <span className="text-text-muted text-[10px]">Turn 1</span>
+                  <span className="text-[10px] text-text-muted font-mono">1,840 tokens</span>
                 </div>
 
-                <div className="flex items-center justify-between p-2 rounded-lg bg-surface border border-emerald-500/30 text-[11px]">
-                  <div className="flex items-center gap-2">
-                    <ModelBadge modelId="gpt-4o" size="sm" />
-                    <span className="text-foreground font-semibold truncate">
-                      High-Throughput Parallel Worker Review
-                    </span>
+                <div
+                  onClick={() => setActiveHandoffStep(2)}
+                  className={cn(
+                    "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer text-xs",
+                    activeHandoffStep === 2
+                      ? "bg-white dark:bg-stone-800/80 border-emerald-500/40 text-foreground shadow-xs ring-1 ring-emerald-500/20"
+                      : "bg-white/60 dark:bg-stone-900/40 border-stone-200 dark:border-white/[0.05] hover:bg-white dark:hover:bg-stone-800/50"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <ModelBadge modelId="deepseek-v4-pro" size="sm" />
+                    <span className="text-foreground font-semibold">Turn 2: CAS Ring-Buffer Theorem Proof</span>
                   </div>
-                  <span className="text-emerald-600 font-semibold text-[10px]">
-                    Turn 2 (Current)
-                  </span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-medium">+105 t/s</span>
+                </div>
+
+                <div
+                  onClick={() => setActiveHandoffStep(3)}
+                  className={cn(
+                    "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer text-xs",
+                    activeHandoffStep === 3
+                      ? "bg-white dark:bg-stone-800/80 border-emerald-500/40 text-foreground shadow-xs ring-1 ring-emerald-500/20"
+                      : "bg-white/60 dark:bg-stone-900/40 border-stone-200 dark:border-white/[0.05] hover:bg-white dark:hover:bg-stone-800/50"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <ModelBadge modelId="opus-5-5" size="sm" />
+                    <span className="text-foreground font-semibold">Turn 3: Memory Safety &amp; Code Synthesis</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-medium">Verified Zero Leaks</span>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Card 2: In-Page Browser Extension Sidebar */}
+          {/* Card 2: Persistent In-Page Sidebar */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="p-6 sm:p-8 rounded-2xl bg-surface border border-border hover:border-emerald-500/40 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+            variants={revealItem}
+            className="p-6 sm:p-8 rounded-3xl bg-white/80 dark:bg-stone-900/40 border border-stone-200/90 dark:border-white/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-xs hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between group backdrop-blur-md"
           >
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-elevated border border-border text-[11px] font-semibold text-emerald-600 mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
                 <PanelRight className="h-3 w-3" />
                 <span>CHROME EXTENSION</span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                Persistent In-Page Sidebar
+                Persistent In-Page Companion
               </h3>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-6">
-                Dock alongside any documentation or pull request. Toggle instantly
-                with universal hotkey <kbd className="px-1.5 py-0.5 rounded bg-surface-elevated border border-border font-mono text-[11px] text-foreground">Ctrl+Shift+E</kbd>.
+                Summon with <kbd className="px-1.5 py-0.5 rounded bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 font-mono text-[11px] text-foreground">Ctrl+Shift+E</kbd>. Dock alongside any documentation, GitHub PR, or research paper without leaving your active tab.
               </p>
             </div>
 
-            {/* Visual representation */}
-            <div className="p-3.5 rounded-xl bg-surface-elevated/70 border border-border-subtle flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-                  <Sparkles className="h-3.5 w-3.5" />
-                </div>
-                <div>
-                  <div className="text-xs font-semibold text-foreground">
-                    EchoGPT Sidebar
-                  </div>
-                  <div className="text-[10px] text-emerald-600 font-medium">
-                    DOM Connected
-                  </div>
-                </div>
+            <div className="p-4 rounded-2xl bg-stone-100/70 dark:bg-stone-950/70 border border-stone-200/80 dark:border-white/[0.06] space-y-2.5 backdrop-blur-xs">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-foreground flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>DOM Context Hook</span>
+                </span>
+                <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">Active</span>
               </div>
-              <kbd className="px-2 py-1 rounded bg-surface border border-border font-mono text-[11px] text-text-muted">
-                Ctrl+Shift+E
-              </kbd>
+              <div className="p-2.5 rounded-xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-white/[0.06] text-[11px] text-text-secondary leading-relaxed">
+                Automatically mounts to active tab DOM. Zero stylesheet bleeding via isolated shadow-root container.
+              </div>
+              <Link href="/extension" className="pt-1 block">
+                <span className="text-xs px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold inline-flex items-center gap-1.5 transition-colors">
+                  Test In Simulator <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
             </div>
           </motion.div>
 
-          {/* Card 3: Floating Highlight & Explain */}
+          {/* Card 3: Floating Text Selection Tool */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="p-6 sm:p-8 rounded-2xl bg-surface border border-border hover:border-emerald-500/40 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+            variants={revealItem}
+            className="p-6 sm:p-8 rounded-3xl bg-white/80 dark:bg-stone-900/40 border border-stone-200/90 dark:border-white/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-xs hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between group backdrop-blur-md"
           >
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-elevated border border-border text-[11px] font-semibold text-emerald-600 mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
                 <MousePointerClick className="h-3 w-3" />
-                <span>CONTEXTUAL ASSIST</span>
+                <span>INSTANT INLINE QUERY</span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                Instant Text Highlight & Explain
+                Highlight &amp; Ask EchoGPT
               </h3>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-6">
-                Select any text or code snippet on the web to reveal the floating
-                &ldquo;Ask EchoGPT ✨&rdquo; action chip. Automatically populates prompt
-                context.
+                Highlight any text on the web. A floating contextual chip appears instantly to explain, translate, or refute the passage without opening a new tab.
               </p>
             </div>
 
-            {/* Visual Highlight chip */}
-            <div className="p-3 rounded-xl bg-surface-elevated/70 border border-border-subtle space-y-2">
-              <div className="text-[11px] text-text-secondary line-through opacity-40">
-                Traditional: Copy → Switch Tab → Paste → Wait
-              </div>
-              <div className="p-2 rounded-lg bg-surface border border-emerald-500/40 shadow-xs flex items-center justify-between">
-                <span className="text-xs font-medium text-foreground">
-                  Highlight snippet on page
+            {/* Interactive Highlight Demo */}
+            <div
+              onClick={() => setSimulatedHighlight((p) => !p)}
+              className="p-4 rounded-2xl bg-stone-100/70 dark:bg-stone-950/70 border border-stone-200/80 dark:border-white/[0.06] relative cursor-pointer group-hover:border-emerald-500/30 transition-colors backdrop-blur-xs"
+              title="Click to simulate highlight"
+            >
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Decoupling the presentation tier from upstream LLM inference{" "}
+                <span className={cn("rounded px-1.5 py-0.5 transition-colors font-medium", simulatedHighlight ? "bg-emerald-500/25 dark:bg-emerald-500/35 text-emerald-950 dark:text-emerald-100 border-b-2 border-emerald-500" : "bg-emerald-500/15 dark:bg-emerald-500/20 text-foreground")}>
+                  cuts operational expenses by 42%
+                </span>{" "}
+                while maintaining failover reliability.
+              </p>
+
+              <div className="mt-3 flex items-center justify-between text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500 text-white font-semibold shadow-xs">
+                  <Sparkles className="h-3 w-3" />
+                  <span>Ask EchoGPT ✨</span>
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-semibold shadow-xs">
-                  <Sparkles className="h-3 w-3" /> Ask EchoGPT
-                </span>
+                <span className="text-[10px] text-text-muted">Click text to toggle</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Card 4: Universal Keyboard Ergonomics */}
+          {/* Card 4: Local-First Cryptographic Vault */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="p-6 sm:p-8 rounded-2xl bg-surface border border-border hover:border-emerald-500/40 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+            variants={revealItem}
+            className="p-6 sm:p-8 rounded-3xl bg-white/80 dark:bg-stone-900/40 border border-stone-200/90 dark:border-white/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-xs hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between group backdrop-blur-md"
           >
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-elevated border border-border text-[11px] font-semibold text-emerald-600 mb-3">
-                <Keyboard className="h-3 w-3" />
-                <span>POWER-USER FLOW</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
+                <Lock className="h-3 w-3" />
+                <span>PRIVACY &amp; SECURITY</span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                Universal Keyboard Shortcuts
+                Local-First Encrypted Vault
               </h3>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-6">
-                Engineered for speed. Never take your hands off the keyboard.
-                Submit with Enter, format multiline prompts with Shift+Enter.
+                Your conversations, custom quick prompts, and extension settings persist inside your local browser memory. Zero third-party model training on private code.
               </p>
             </div>
 
-            {/* Visual keycaps */}
-            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-              <div className="p-2 rounded-lg bg-surface-elevated border border-border flex items-center justify-between">
-                <span className="text-text-muted">Send:</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border font-semibold text-foreground">
-                  Enter ↵
-                </kbd>
+            <div className="p-4 rounded-2xl bg-stone-100/70 dark:bg-stone-950/70 border border-stone-200/80 dark:border-white/[0.06] space-y-2 text-xs backdrop-blur-xs">
+              <div className="flex items-center justify-between font-mono text-[11px]">
+                <span className="text-text-muted">Storage Engine</span>
+                <span className="text-foreground font-semibold">IndexedDB / Local-First</span>
               </div>
-              <div className="p-2 rounded-lg bg-surface-elevated border border-border flex items-center justify-between">
-                <span className="text-text-muted">Newline:</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border font-semibold text-foreground">
-                  Shift+Enter
-                </kbd>
+              <div className="flex items-center justify-between font-mono text-[11px]">
+                <span className="text-text-muted">Telemetry Leaks</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">0.00% Zero</span>
+              </div>
+              <div className="flex items-center justify-between font-mono text-[11px]">
+                <span className="text-text-muted">Offline Search</span>
+                <span className="text-foreground font-semibold">&lt; 5ms Indexing</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Card 5: Local-First Privacy */}
+          {/* Card 5: MCP Tool Extensibility Hub */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.25 }}
-            className="p-6 sm:p-8 rounded-2xl bg-surface border border-border hover:border-emerald-500/40 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between group"
+            variants={revealItem}
+            className="p-6 sm:p-8 rounded-3xl bg-white/80 dark:bg-stone-900/40 border border-stone-200/90 dark:border-white/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 shadow-xs hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between group backdrop-blur-md"
           >
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-elevated border border-border text-[11px] font-semibold text-emerald-600 mb-3">
-                <ShieldCheck className="h-3 w-3" />
-                <span>PRIVACY BY DEFAULT</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
+                <Cpu className="h-3 w-3" />
+                <span>TOOL ECOSYSTEM</span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                Client-Side Session Storage
+                Model Context Protocol (MCP)
               </h3>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-6">
-                All conversations, search queries, and pinned chats live exclusively
-                in your browser&apos;s local storage. Zero corporate tracking or database leaks.
+                Equip any engine with native MCP connectors: DOM context reading, Python WASM execution sandboxes, and repository file system access.
               </p>
             </div>
 
-            {/* Visual badge */}
-            <div className="p-2.5 rounded-xl bg-surface-elevated/70 border border-border-subtle flex items-center gap-2 text-xs text-emerald-600 font-medium">
-              <ShieldCheck className="h-4 w-4 shrink-0" />
-              <span>100% Client-Side Persistence</span>
+            <div className="p-3.5 rounded-2xl bg-stone-100/70 dark:bg-stone-950/70 border border-stone-200/80 dark:border-white/[0.06] flex flex-wrap gap-2 text-[11px] font-mono backdrop-blur-xs">
+              <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-white/[0.06] text-foreground font-mono">
+                dom-reader-v2
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-white/[0.06] text-foreground font-mono">
+                python-wasm
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-white/[0.06] text-foreground font-mono">
+                github-octokit
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-white/[0.06] text-foreground font-mono">
+                vector-cache
+              </span>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

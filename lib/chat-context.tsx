@@ -32,7 +32,7 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
     title: "Next.js 16 App Router Architecture",
     createdAt: 1727258400000,
     updatedAt: 1727258400000,
-    modelId: "claude-3-5-sonnet",
+    modelId: "echogpt",
     isPinned: true,
     messages: [
       {
@@ -44,7 +44,7 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
       {
         id: "msg-1-2",
         role: "assistant",
-        modelId: "claude-3-5-sonnet",
+        modelId: "echogpt",
         content: `Next.js 16 leverages React 19's streaming primitives and Turbopack compilation:
 
 1. **Turbopack Compiler Speeds:** Up to **10x faster HMR** (Hot Module Replacement) and sub-second cold starts.
@@ -61,7 +61,7 @@ This guarantees sub-second First Contentful Paint (FCP) and zero Cumulative Layo
     title: "Chrome Extension Multi-Model Sidebar",
     createdAt: 1727172000000,
     updatedAt: 1727172000000,
-    modelId: "gpt-4o",
+    modelId: "gpt-5-6",
     messages: [
       {
         id: "msg-2-1",
@@ -72,7 +72,7 @@ This guarantees sub-second First Contentful Paint (FCP) and zero Cumulative Layo
       {
         id: "msg-2-2",
         role: "assistant",
-        modelId: "gpt-4o",
+        modelId: "gpt-5-6",
         content: `To ensure 60fps scrolling on target web pages:
 
 * Use \`requestIdleCallback\` for text extraction.
@@ -97,26 +97,29 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const storedActiveId = localStorage.getItem(ACTIVE_CHAT_KEY);
+    const frameId = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        const storedActiveId = localStorage.getItem(ACTIVE_CHAT_KEY);
 
-      if (stored) {
-        const parsed = JSON.parse(stored) as Conversation[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setConversations(parsed);
-          if (storedActiveId && parsed.some((c) => c.id === storedActiveId)) {
-            setActiveChatId(storedActiveId);
-          } else {
-            setActiveChatId(parsed[0].id);
+        if (stored) {
+          const parsed = JSON.parse(stored) as Conversation[];
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setConversations(parsed);
+            if (storedActiveId && parsed.some((c) => c.id === storedActiveId)) {
+              setActiveChatId(storedActiveId);
+            } else {
+              setActiveChatId(parsed[0].id);
+            }
           }
         }
+      } catch {
+        // Fallback to initial
+      } finally {
+        setIsInitialized(true);
       }
-    } catch {
-      // Fallback to initial
-    } finally {
-      setIsInitialized(true);
-    }
+    });
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
   // Save to localStorage on change
@@ -137,7 +140,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   // Keep activeModelId synced with active conversation
   useEffect(() => {
     if (activeConversation) {
-      setActiveModelId(activeConversation.modelId);
+      const model = activeConversation.modelId;
+      const frameId = requestAnimationFrame(() => {
+        setActiveModelId(model);
+      });
+      return () => cancelAnimationFrame(frameId);
     }
   }, [activeConversation]);
 

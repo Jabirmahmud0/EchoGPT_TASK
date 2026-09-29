@@ -23,7 +23,7 @@ export function ModelSelector({
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const currentModel = MODELS[selectedModelId] || MODELS["claude-3-5-sonnet"];
+  const currentModel = MODELS[selectedModelId] || MODELS["echogpt"];
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

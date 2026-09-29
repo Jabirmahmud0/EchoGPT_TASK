@@ -1,11 +1,6 @@
 import { ModelId } from "./types";
 
-interface MockResponseRule {
-  keywords: string[];
-  generate: (prompt: string, modelId: ModelId) => string;
-}
-
-export function generateMockAIResponse(prompt: string, modelId: ModelId): string {
+export function generateMockAIResponse(prompt: string, _modelId: ModelId): string {
   const lower = prompt.toLowerCase();
 
   if (lower.includes("code") || lower.includes("react") || lower.includes("typescript") || lower.includes("hook") || lower.includes("function") || lower.includes("fix")) {
@@ -80,13 +75,17 @@ When evaluating this problem through the lens of modern software engineering:
    Traditional architectures tightly couple consumer interfaces to single upstream providers. When provider rate limits or downtime occurs, the entire user session degrades.
 
 2. **The Multi-Model Advantage:**
-   EchoGPT's orchestration architecture decouples presentation from model inference. Each model (**GPT-4o**, **Claude 3.5 Sonnet**, **Gemini 1.5 Pro**) is treated as an interchangeable reasoning node with specialized competencies:
-   * **Claude 3.5 Sonnet:** Unrivaled code synthesis and architectural nuance.
-   * **GPT-4o:** Rapid multimodal throughput and general problem solving.
-   * **Gemini 1.5 Pro:** Extreme 2M token context retrieval for massive documentation.
+   EchoGPT's orchestration architecture decouples presentation from model inference. Our default engine (**EchoGPT**) routes queries dynamically across world-class models (**DeepSeek V4 Pro**, **Qwen 3.8 Plus**, **Kimi 3**, **Gemini 3.8 Flash**, **GPT-5.6**, **Opus 5.5**), each acting as a specialized reasoning node:
+   * **EchoGPT (Default):** Dynamic multi-model router selecting the optimal engine for zero latency and cost.
+   * **DeepSeek V4 Pro:** Extreme mathematical logic, theorem proving, and algorithmic synthesis.
+   * **Qwen 3.8 Plus:** Advanced multilingual reasoning and agentic workflow orchestration.
+   * **Kimi 3:** Unmatched 5M token context retrieval for massive full-codebase comprehension.
+   * **Gemini 3.8 Flash:** Sub-30ms real-time multimodal processing and live web grounding.
+   * **GPT-5.6:** Autonomous frontier reasoning, system architecture, and world simulation.
+   * **Opus 5.5:** Anthropic's pinnacle deep thinking engine with exhaustive code verification.
 
 3. **Recommendation:**
-   For critical development workflows, utilize **Claude 3.5 Sonnet** for system design and refactoring, while falling back to **GPT-4o** for rapid syntax checks and quick transformations.`;
+   Let **EchoGPT** auto-route your prompt, or switch to **Opus 5.5** / **GPT-5.6** for complex system architecture, while cross-checking against **DeepSeek V4 Pro** for mathematical precision.`;
   }
 
   // Default intelligent response

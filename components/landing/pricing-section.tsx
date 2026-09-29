@@ -15,70 +15,26 @@ import {
   CheckCircle2,
   Lock,
   Layers,
+  Users,
+  Building,
   HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
-
-interface ComparisonRow {
-  feature: string;
-  category: string;
-  traditional: string;
-  echoGpt: string;
-  echoHighlight?: boolean;
-}
-
-const COMPARISON_ROWS: ComparisonRow[] = [
-  {
-    category: "Cost & Billing",
-    feature: "Monthly Cost",
-    traditional: "$60+ / month ($20 × 3 subscriptions)",
-    echoGpt: "$15 / month (Save 75%)",
-    echoHighlight: true,
-  },
-  {
-    category: "Workflow",
-    feature: "Active Browser Tabs",
-    traditional: "3–5 disjointed tabs & logins",
-    echoGpt: "1 centralized tab or docked sidebar",
-  },
-  {
-    category: "Workflow",
-    feature: "In-Browser Selection",
-    traditional: "Copy-paste back and forth to chat tab",
-    echoGpt: "Instant highlight & 'Ask EchoGPT' chip",
-    echoHighlight: true,
-  },
-  {
-    category: "Model Access",
-    feature: "Supported Frontier Models",
-    traditional: "Locked to one vendor per account",
-    echoGpt: "GPT-4o, Claude 3.5, Gemini 1.5, Llama 3.1",
-    echoHighlight: true,
-  },
-  {
-    category: "Context & Search",
-    feature: "Unified History",
-    traditional: "Scattered histories across 3 silos",
-    echoGpt: "Synchronized local-first search across all models",
-  },
-  {
-    category: "Developer Tools",
-    feature: "Code Block Highlighting & Export",
-    traditional: "Basic copy button, no multi-model diff",
-    echoGpt: "Full syntax highlighting, copy & markdown export",
-  },
-];
+import { cn } from "@/lib/utils";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export function PricingSection() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"pro" | "team">("pro");
   const [checkoutStep, setCheckoutStep] = useState<"input" | "success">("input");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleOpenProModal = () => {
+  const handleOpenCheckout = (plan: "pro" | "team") => {
+    setSelectedPlan(plan);
     setCheckoutStep("input");
     setIsModalOpen(true);
   };
@@ -94,21 +50,23 @@ export function PricingSection() {
 
   const proPrice = billingCycle === "monthly" ? "$15" : "$12";
   const proBillingPeriod = billingCycle === "monthly" ? "/month" : "/month, billed annually";
+  const teamPrice = billingCycle === "monthly" ? "$39" : "$32";
+  const teamBillingPeriod = billingCycle === "monthly" ? "/seat/mo" : "/seat/mo, billed annually";
 
   return (
-    <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 border-t border-border bg-stone-50/50 dark:bg-stone-950/30">
+    <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 border-t border-border bg-stone-50/50 dark:bg-stone-950/30 relative">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="outline" className="mb-4 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1">
-            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-            Simple, Transparent Pricing
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-            Stop paying three separate <span className="text-emerald-500">$20/mo</span> bills.
+        {/* Section Header with Scroll Reveal */}
+        <ScrollReveal yOffset={18} duration={0.5} className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold tracking-wide uppercase mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Transparent Pricing</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground">
+            All 7 flagship engines. <span className="text-emerald-600 dark:text-emerald-400">One unified bill.</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Get OpenAI, Anthropic, Google, and Meta frontier models in one unified subscription. Save over $45 every single month.
+          <p className="mt-4 text-base sm:text-lg text-muted-foreground">
+            Save $60+ every month compared to separate ChatGPT Plus, Claude Pro, and Gemini Advanced subscriptions.
           </p>
 
           {/* Monthly / Annual Toggle */}
@@ -116,286 +74,284 @@ export function PricingSection() {
             <button
               type="button"
               onClick={() => setBillingCycle("monthly")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={cn(
+                "px-4 py-2 rounded-lg text-xs font-semibold transition-all",
                 billingCycle === "monthly"
                   ? "bg-white dark:bg-stone-900 text-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+              )}
             >
               Monthly Billing
             </button>
             <button
               type="button"
               onClick={() => setBillingCycle("annual")}
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+              className={cn(
+                "relative px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
                 billingCycle === "annual"
-                  ? "bg-white dark:bg-stone-900 text-foreground shadow-xs"
+                  ? "bg-emerald-500 text-white shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+              )}
             >
               Annual Billing
-              <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold bg-emerald-600 px-1.5 py-0.5 rounded-full text-white uppercase tracking-wider">
                 Save 20%
               </span>
             </button>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-20 items-stretch">
-          {/* Free Tier Card */}
-          <Card className="flex flex-col p-8 bg-card border-border hover:border-stone-400 dark:hover:border-stone-700 transition-all rounded-2xl relative shadow-sm">
+        {/* Pricing Cards Grid - 3 Tiers */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16 items-stretch">
+          {/* Tier 1: Free Starter */}
+          <ScrollReveal yOffset={16} duration={0.48} delay={0} className="flex flex-col h-full">
+            <Card className="flex flex-col p-8 bg-card border-border hover:border-stone-400 dark:hover:border-stone-700 transition-all rounded-2xl relative shadow-xs h-full">
             <div className="mb-6">
               <h3 className="text-xl font-bold text-foreground">Free Starter</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Perfect for casual curiosity and testing multi-model intelligence.
+              <p className="text-xs text-muted-foreground mt-1">
+                Explore EchoGPT router and test fast frontier engines without a credit card.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold text-foreground">$0</span>
-                <span className="text-muted-foreground text-sm font-medium">/forever</span>
+                <span className="text-4xl font-extrabold text-foreground font-mono">$0</span>
+                <span className="text-muted-foreground text-xs font-medium">/forever</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">No credit card or API key required</p>
+              <p className="text-[11px] text-muted-foreground mt-1">Zero credit card or API keys required</p>
             </div>
 
             <div className="border-t border-border pt-6 mb-8 flex-1">
               <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">
-                What&apos;s Included
+                Included Features
               </p>
-              <ul className="space-y-3.5 text-sm text-muted-foreground">
+              <ul className="space-y-3.5 text-xs text-muted-foreground">
                 <li className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
-                  <span><strong>30 queries/day</strong> across fast models</span>
+                  <span><strong>30 prompts/day</strong> on EchoGPT auto-router</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
-                  <span>GPT-4o mini &amp; Gemini 1.5 Flash</span>
+                  <span>Gemini 3.8 Flash &amp; Qwen 3.8 access</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
-                  <span>Full Web Workspace (`/app`)</span>
+                  <span>Full Web App Workspace (`/app`)</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
-                  <span>Chrome Extension popup view</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[2.5]" />
-                  </div>
-                  <span>Local-first conversation persistence</span>
+                  <span>Lightweight Chrome Popup</span>
                 </li>
                 <li className="flex items-center gap-3 text-stone-400 dark:text-stone-600 line-through">
                   <div className="w-4 h-4 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-400 flex items-center justify-center shrink-0">
                     <X className="w-3 h-3" />
                   </div>
-                  <span>Claude 3.5 Sonnet &amp; Llama 3.1 70B</span>
+                  <span>Opus 5.5, GPT-5.6 &amp; DeepSeek V4 Pro</span>
                 </li>
                 <li className="flex items-center gap-3 text-stone-400 dark:text-stone-600 line-through">
                   <div className="w-4 h-4 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-400 flex items-center justify-center shrink-0">
                     <X className="w-3 h-3" />
                   </div>
-                  <span>Docked web sidebar &amp; text selection tool</span>
+                  <span>Docked in-browser DOM sidebar</span>
                 </li>
               </ul>
             </div>
 
             <Link href="/app" className="w-full block">
-              <Button variant="outline" className="w-full py-6 font-semibold border-border hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center gap-2">
-                Launch Free Workspace
+              <Button variant="outline" className="w-full py-5 text-xs font-semibold border-border hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center gap-2">
+                Launch Free Starter
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </Card>
+        </ScrollReveal>
 
-          {/* Pro Tier Card (Recommended) */}
-          <div className="relative group">
-            {/* Emerald ambient blur */}
-            <div className="absolute -inset-0.5 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-3xl opacity-30 group-hover:opacity-50 blur-sm transition duration-300" />
+        {/* Tier 2: Pro (Hero / Recommended) */}
+        <ScrollReveal yOffset={16} duration={0.48} delay={0.06} className="relative group flex flex-col h-full">
+          <div className="absolute -inset-0.5 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-3xl opacity-35 group-hover:opacity-55 blur-sm transition duration-300" />
 
-            <Card className="relative flex flex-col p-8 bg-card border-2 border-emerald-500 dark:border-emerald-500 rounded-2xl shadow-xl h-full">
-              {/* Popular badge */}
-              <div className="absolute -top-3.5 right-6">
-                <span className="bg-emerald-500 text-white text-xs font-bold tracking-wide uppercase px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                  <Zap className="w-3 h-3 fill-current" />
-                  Recommended
-                </span>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-                  EchoGPT Pro
-                  <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10 text-[11px]">
-                    All-in-One
-                  </Badge>
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  For engineers, researchers, and creators wanting flagship models without silos.
-                </p>
-                <div className="mt-6 flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-foreground">{proPrice}</span>
-                  <span className="text-muted-foreground text-sm font-medium">{proBillingPeriod}</span>
-                </div>
-                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">
-                  Replaces $60/month across separate subscriptions
-                </p>
-              </div>
-
-              <div className="border-t border-border pt-6 mb-8 flex-1">
-                <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">
-                  Everything in Free, plus:
-                </p>
-                <ul className="space-y-3.5 text-sm text-foreground">
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span><strong>Unlimited requests</strong> on flagship frontier models</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span><strong>All 4 Models:</strong> GPT-4o, Claude 3.5, Gemini 1.5 &amp; Llama 3.1</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span><strong>Full Chrome Extension:</strong> Popup + Docked Sidebar (`Ctrl+Shift+E`)</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span>In-page text selection &amp; inline AI assist</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span>Instant model switching without losing conversation context</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span>Code highlighting, copy snippet, &amp; markdown export</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span>Priority streaming bandwidth &amp; zero throttle rate</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Button
-                onClick={handleOpenProModal}
-                className="w-full py-6 font-semibold bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 group/btn"
-              >
-                Start 14-Day Free Trial
-                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-              </Button>
-            </Card>
-          </div>
-        </div>
-
-        {/* Why Choose EchoGPT - Value Comparison Matrix */}
-        <div className="mt-20 pt-16 border-t border-border">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-              Why Choose EchoGPT?
-            </h3>
-            <p className="mt-3 text-muted-foreground text-sm sm:text-base">
-              A direct comparison between managing multiple AI subscriptions versus the EchoGPT unified ecosystem.
-            </p>
-          </div>
-
-          <div className="flex items-center justify-end sm:hidden mb-2 text-xs text-text-muted">
-            <span>Scroll horizontally to compare →</span>
-          </div>
-
-          <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
-            <table className="w-full text-left text-sm border-collapse min-w-[640px]">
-              <thead>
-                <tr className="border-b border-border bg-stone-100/60 dark:bg-stone-900/60">
-                  <th className="py-4 px-6 font-semibold text-foreground w-1/3">Feature &amp; Workflow</th>
-                  <th className="py-4 px-6 font-semibold text-muted-foreground w-1/3">
-                    Separate Subscriptions
-                    <span className="block text-xs font-normal text-muted-foreground/80 mt-0.5">
-                      OpenAI + Anthropic + Google ($60/mo)
-                    </span>
-                  </th>
-                  <th className="py-4 px-6 font-bold text-emerald-600 dark:text-emerald-400 w-1/3 bg-emerald-500/5">
-                    EchoGPT Ecosystem
-                    <span className="block text-xs font-medium text-emerald-600/80 dark:text-emerald-400/80 mt-0.5">
-                      Unified ($15/mo)
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {COMPARISON_ROWS.map((row, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-stone-50/80 dark:hover:bg-stone-900/30 transition-colors"
-                  >
-                    <td className="py-4 px-6 font-medium text-foreground">
-                      <div className="flex flex-col">
-                        <span>{row.feature}</span>
-                        <span className="text-xs text-muted-foreground font-normal">{row.category}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <X className="w-4 h-4 text-rose-500 shrink-0" />
-                        <span>{row.traditional}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 font-medium text-foreground bg-emerald-500/5">
-                      <div className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-emerald-500 stroke-[3] shrink-0" />
-                        <span className={row.echoHighlight ? "text-emerald-600 dark:text-emerald-400 font-semibold" : ""}>
-                          {row.echoGpt}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Guarantee banner */}
-          <div className="mt-8 p-5 rounded-2xl bg-card border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-sm text-foreground">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-semibold">14-Day Money-Back Guarantee</p>
-                <p className="text-xs text-muted-foreground">Cancel anytime with 1 click in your settings. Zero questions asked.</p>
-              </div>
+          <Card className="relative flex flex-col p-8 bg-card border-2 border-emerald-500 rounded-2xl shadow-xl h-full">
+            <div className="absolute -top-3.5 right-6">
+              <span className="bg-emerald-500 text-white text-[11px] font-bold tracking-wide uppercase px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <Zap className="w-3 h-3 fill-current" />
+                Most Popular
+              </span>
             </div>
+
+            <div className="mb-6">
+              <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                EchoGPT Pro
+                <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10 text-[10px]">
+                  All 7 Engines
+                </Badge>
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                For individual engineers, researchers, and builders needing unthrottled frontier power.
+              </p>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-4xl font-extrabold text-foreground font-mono">{proPrice}</span>
+                <span className="text-muted-foreground text-xs font-medium">{proBillingPeriod}</span>
+              </div>
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
+                Replaces $75/mo across 4 separate AI subscriptions
+              </p>
+            </div>
+
+            <div className="border-t border-border pt-6 mb-8 flex-1">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">
+                Everything in Starter, plus:
+              </p>
+              <ul className="space-y-3.5 text-xs text-foreground">
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span><strong>Unlimited requests</strong> across all 7 frontier models</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span>Opus 5.5, GPT-5.6, DeepSeek V4 Pro &amp; Kimi 3 (5M context)</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span><strong>Full Chrome Extension:</strong> Popup + Docked Sidebar (`Ctrl+Shift+E`)</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span>In-page DOM text highlighting &amp; floating chip</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span>Mid-conversation model hot-swapping without context loss</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span>Side-by-side Dual Model Consensus Arena</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                  <span>Priority router queue with sub-30ms latency</span>
+                </li>
+              </ul>
+            </div>
+
             <Button
-              onClick={handleOpenProModal}
-              variant="outline"
-              size="sm"
-              className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 shrink-0 font-medium"
+              onClick={() => handleOpenCheckout("pro")}
+              className="w-full py-5 text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 group/btn cursor-pointer"
             >
-              Try Pro Risk-Free
+              Start 14-Day Free Trial
+              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
             </Button>
+          </Card>
+        </ScrollReveal>
+
+        {/* Tier 3: Team & Enterprise */}
+        <ScrollReveal yOffset={16} duration={0.48} delay={0.12} className="flex flex-col h-full">
+          <Card className="flex flex-col p-8 bg-card border-border hover:border-stone-400 dark:hover:border-stone-700 transition-all rounded-2xl relative shadow-xs h-full">
+            <div className="mb-6">
+              <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                Team &amp; Scale
+                <Badge variant="outline" className="border-border text-muted-foreground text-[10px]">
+                  Centralized
+                </Badge>
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                For engineering organizations and agencies needing shared knowledge graphs.
+              </p>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-4xl font-extrabold text-foreground font-mono">{teamPrice}</span>
+                <span className="text-muted-foreground text-xs font-medium">{teamBillingPeriod}</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1">Centralized invoice &amp; admin controls</p>
+            </div>
+
+            <div className="border-t border-border pt-6 mb-8 flex-1">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">
+                Everything in Pro, plus:
+              </p>
+              <ul className="space-y-3.5 text-xs text-muted-foreground">
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                  <span><strong>Shared Team Prompt Library</strong> with version control</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                  <span>SAML SSO / Okta &amp; Google Workspace auth</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                  <span>Aggregated token consumption &amp; cost analytics</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                  <span>Dedicated enterprise failover cluster</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                  <span>Custom BAA &amp; zero data retention agreements</span>
+                </li>
+              </ul>
+            </div>
+
+            <Button
+              onClick={() => handleOpenCheckout("team")}
+              variant="outline"
+              className="w-full py-5 text-xs font-semibold border-border hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              Contact Team Sales
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Card>
+        </ScrollReveal>
+      </div>
+
+      {/* Security & Reassurance Strip with Scroll Reveal */}
+      <ScrollReveal yOffset={16} duration={0.48} delay={0.05} className="p-5 rounded-2xl bg-card border border-border flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 text-sm text-foreground">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-semibold text-xs sm:text-sm">14-Day Free Trial &amp; Money-Back Guarantee</p>
+              <p className="text-[11px] text-muted-foreground">Cancel anytime with 1 click in your account settings. Zero questions asked.</p>
+            </div>
           </div>
-        </div>
+          <Button
+            onClick={() => handleOpenCheckout("pro")}
+            variant="outline"
+            size="sm"
+            className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 shrink-0 font-medium text-xs cursor-pointer"
+          >
+            Try Pro Risk-Free
+          </Button>
+        </ScrollReveal>
       </div>
 
       {/* Simulated Checkout Modal */}
@@ -403,7 +359,7 @@ export function PricingSection() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         maxWidth="md"
-        title={checkoutStep === "input" ? "Activate EchoGPT Pro" : "Welcome to EchoGPT Pro!"}
+        title={checkoutStep === "input" ? `Activate EchoGPT ${selectedPlan === "pro" ? "Pro" : "Team"}` : "Welcome to EchoGPT!"}
         description={
           checkoutStep === "input"
             ? `14-day free trial on the ${billingCycle} plan. Cancel anytime.`
@@ -412,19 +368,24 @@ export function PricingSection() {
       >
         {checkoutStep === "input" ? (
           <form onSubmit={handleSimulatePayment} className="space-y-4 pt-2">
-            {/* Plan Summary Card */}
             <div className="p-4 rounded-xl bg-stone-100 dark:bg-stone-900 border border-border flex items-center justify-between">
               <div>
-                <p className="font-semibold text-sm text-foreground">EchoGPT Pro ({billingCycle})</p>
-                <p className="text-xs text-muted-foreground">Unlimited GPT-4o, Claude 3.5, Gemini 1.5, Llama 3.1</p>
+                <p className="font-semibold text-sm text-foreground">
+                  EchoGPT {selectedPlan === "pro" ? "Pro" : "Team"} ({billingCycle})
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Unlimited access to EchoGPT, Opus 5.5, GPT-5.6, DeepSeek V4 Pro, Kimi 3, Gemini 3.8
+                </p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-base text-foreground">{proPrice}<span className="text-xs font-normal text-muted-foreground">/mo</span></p>
+                <p className="font-bold text-base text-foreground">
+                  {selectedPlan === "pro" ? proPrice : teamPrice}
+                  <span className="text-xs font-normal text-muted-foreground">/mo</span>
+                </p>
                 <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">14 days free</span>
               </div>
             </div>
 
-            {/* Test Credit Card notice */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">
                 Card Information (Simulation)
@@ -488,7 +449,7 @@ export function PricingSection() {
             <div>
               <h4 className="text-lg font-bold text-foreground">Access Granted</h4>
               <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
-                You now have unlimited frontier access across all four models in the web workspace and extension.
+                You now have unlimited frontier access across all 7 models in the web workspace and extension.
               </p>
             </div>
             <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">

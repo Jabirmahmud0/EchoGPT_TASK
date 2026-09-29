@@ -26,9 +26,11 @@ interface NavLink {
 const NAV_LINKS: NavLink[] = [
   { label: "Features", href: "#features", isAnchor: true },
   { label: "AI Models", href: "#models", isAnchor: true },
-  { label: "Product Preview", href: "#preview", isAnchor: true },
+  { label: "Product Tour", href: "#preview", isAnchor: true },
+  { label: "Why EchoGPT", href: "#why-choose-us", isAnchor: true },
   { label: "Pricing", href: "#pricing", isAnchor: true },
   { label: "FAQ", href: "#faq", isAnchor: true },
+  { label: "Reviews", href: "#testimonials", isAnchor: true },
 ];
 
 export function LandingNavbar() {

@@ -1,223 +1,245 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle, Star, Quote, Sparkles } from "lucide-react";
+import {
+  ChevronDown,
+  HelpCircle,
+  Search,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Cpu,
+  Layers,
+  Puzzle,
+  CreditCard,
+  MessageSquare,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 interface FAQItem {
+  id: string;
+  category: "Engines" | "Extension" | "Privacy" | "Billing";
   question: string;
   answer: string;
-  category: string;
 }
 
 const FAQS: FAQItem[] = [
   {
-    category: "Models & Architecture",
-    question: "Do I need my own API keys to use EchoGPT?",
+    id: "keys",
+    category: "Engines",
+    question: "Do I need to supply my own API keys to use EchoGPT?",
     answer:
-      "No. EchoGPT includes direct access to all flagship frontier models (OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet, Google Gemini 1.5 Pro, and Meta Llama 3.1) out of the box. You don't need to generate, manage, or pay for individual API keys.",
+      "No. EchoGPT comes pre-wired with direct enterprise access to all 7 frontier models: EchoGPT default auto-router, DeepSeek V4 Pro, Qwen 3.8 Plus, Kimi 3, Gemini 3.8 Flash, GPT-5.6, and Opus 5.5. You do not need to sign up for OpenAI, Anthropic, or Google Cloud API consoles, manage usage quotas, or pay per-token surcharges.",
   },
   {
-    category: "Extension & Browser",
-    question: "How does the Chrome Extension interact with web pages?",
+    id: "switching",
+    category: "Engines",
+    question: "How does mid-conversation model switching work without losing context?",
     answer:
-      "The EchoGPT extension runs in two modes: a lightweight popup (380px) for quick prompts, and a docked sidebar (Ctrl+Shift+E). When browsing any website, you can highlight text to trigger the floating 'Ask EchoGPT' chip, which instantly sends the selected DOM content directly into your active model's conversation without leaving your tab.",
+      "EchoGPT normalizes conversation state across divergent engine APIs using our unified schema router. When you switch from EchoGPT or Opus 5.5 to DeepSeek V4 Pro or Kimi 3 mid-thread, the complete message history, code blocks, and system instructions are dynamically re-tokenized and formatted into the target engine's native dialect with zero context loss.",
   },
   {
-    category: "Workflow",
-    question: "Can I switch models mid-conversation without losing context?",
+    id: "router",
+    category: "Engines",
+    question: "What is the EchoGPT default auto-router?",
     answer:
-      "Yes! That is one of EchoGPT's core superpowers. You can begin a complex reasoning problem with Claude 3.5 Sonnet for code architecture, switch to GPT-4o for refactoring, or query Gemini 1.5 Pro for massive documentation analysis—all within the exact same chat thread with full context preservation.",
+      "EchoGPT acts as an intelligent traffic orchestrator. When active, it calculates query complexity, token density, and reasoning requirements. Code architecture and math proofs are routed to DeepSeek V4 Pro or Opus 5.5, massive documents up to 5M tokens are dispatched to Kimi 3 or Gemini 3.8 Flash, and rapid conversational tasks stream instantly from Gemini 3.8 Flash at sub-20ms latency.",
   },
   {
-    category: "Privacy & Security",
-    question: "Is my chat data and code snippets kept private?",
+    id: "extension",
+    category: "Extension",
+    question: "How does the Chrome Extension interact with web pages and code repos?",
     answer:
-      "EchoGPT operates with a local-first storage architecture. Your conversations, custom prompt templates, and extension settings persist inside your browser's encrypted localStorage. We do not sell your prompts or use your private queries to train third-party machine learning models.",
+      "The EchoGPT extension operates in dual mode: a compact 380px popup for instant lookups, and a docked sidebar (Ctrl+Shift+E). When viewing GitHub PRs, documentation, or technical papers, highlight any text to summon the floating 'Ask EchoGPT' chip. It captures DOM text context and feeds it directly into your active model without switching tabs.",
   },
   {
+    id: "shadow-dom",
+    category: "Extension",
+    question: "Will the browser extension clash with website styling or break pages?",
+    answer:
+      "No. The EchoGPT in-page UI renders inside an isolated Shadow DOM container with closed encapsulation. Webpage CSS cannot bleed into the extension, and EchoGPT styling will never mutate the host webpage's layout, events, or DOM structure.",
+  },
+  {
+    id: "privacy",
+    category: "Privacy",
+    question: "Where are my conversations and private codebase snippets stored?",
+    answer:
+      "EchoGPT utilizes a strict local-first cryptographic storage architecture. Your chat histories, prompt presets, and highlighted snippets persist directly inside your browser's encrypted localStorage and IndexedDB. We do not sell your prompts, log private credentials, or train machine learning models on your proprietary code.",
+  },
+  {
+    id: "downtime",
+    category: "Privacy",
+    question: "What happens if an upstream provider like OpenAI or Anthropic suffers an outage?",
+    answer:
+      "Because EchoGPT aggregates multiple independent frontier providers across different datacenters, your workflow is resilient. If OpenAI experiences elevated error rates, EchoGPT auto-router automatically falls back to DeepSeek V4 Pro or Opus 5.5 in milliseconds, ensuring your engineering pipeline stays unblocked.",
+  },
+  {
+    id: "billing",
     category: "Billing",
-    question: "What is the difference between the Free tier and Pro?",
+    question: "Can I cancel my subscription or change team seats anytime?",
     answer:
-      "The Free tier gives you 30 daily prompts across fast models (GPT-4o mini and Gemini 1.5 Flash) plus the popup extension. The Pro tier ($15/mo) unlocks unlimited queries on all 4 flagship frontier models, the full docked sidebar with in-page DOM text selection, split-view comparison, and priority fast-lane streaming.",
-  },
-  {
-    category: "Reliability",
-    question: "What happens if an upstream model provider experiences downtime?",
-    answer:
-      "Because EchoGPT aggregates multiple independent frontier providers (OpenAI, Anthropic, Google, and Meta), you never get blocked. If one vendor encounters latency or rate limits, you can switch to an alternative flagship model with one click.",
+      "Yes. There are zero long-term commitments or lock-in contracts. You can upgrade, downgrade, or cancel your subscription with 1 click directly in your settings. If you cancel, your Pro access remains active through the end of your billing cycle.",
   },
 ];
 
-interface Testimonial {
-  name: string;
-  role: string;
-  company: string;
-  avatar: string;
-  favoriteModel: string;
-  content: string;
-}
-
-const TESTIMONIALS: Testimonial[] = [
-  {
-    name: "Alex Rivera",
-    role: "Staff Software Engineer",
-    company: "Vercel Ecosystem",
-    avatar: "AR",
-    favoriteModel: "Claude 3.5 Sonnet",
-    content:
-      "I used to keep three browser windows open just to cross-check Claude's TypeScript refactors against GPT-4o. EchoGPT unified my entire developer loop into one sidebar. Saved me $45/mo on subscriptions alone.",
-  },
-  {
-    name: "Elena Rostova",
-    role: "AI Research Fellow",
-    company: "Stanford NLP Lab",
-    avatar: "ER",
-    favoriteModel: "Gemini 1.5 Pro",
-    content:
-      "The ability to highlight documentation on any arXiv paper and query Gemini with 2M token context without leaving the PDF reader has fundamentally sped up our literature review cycles.",
-  },
-  {
-    name: "Marcus Vance",
-    role: "Founding Engineer",
-    company: "HyperScale Data",
-    avatar: "MV",
-    favoriteModel: "GPT-4o + Llama 3.1",
-    content:
-      "Being able to toggle instantly between closed frontier models and open-weights Llama 3.1 gives our engineering team the exact calibration we need for benchmarking prompt outputs.",
-  },
-];
+const CATEGORIES = ["All", "Engines", "Extension", "Privacy", "Billing"] as const;
 
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openIds, setOpenIds] = useState<string[]>(["keys", "switching"]);
 
-  const toggleItem = (index: number) => {
-    setOpenIndex((current) => (current === index ? null : index));
+  const toggleAccordion = (id: string) => {
+    setOpenIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
+  const filteredFaqs = useMemo(() => {
+    return FAQS.filter((faq) => {
+      const matchesCategory =
+        activeCategory === "All" || faq.category === activeCategory;
+      const matchesSearch =
+        searchQuery === "" ||
+        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
+
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 border-t border-border bg-background">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="outline" className="mb-4 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1">
-            <HelpCircle className="w-3.5 h-3.5 mr-1.5" />
-            Frequently Asked Questions
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-            Everything you need to know about <span className="text-emerald-500">EchoGPT</span>
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border relative">
+      <div className="max-w-4xl mx-auto">
+        {/* Section Header with Scroll Reveal */}
+        <ScrollReveal yOffset={18} duration={0.5} className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold tracking-wide uppercase mb-3">
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground">
+            Clear answers. <span className="text-emerald-600 dark:text-emerald-400">Zero ambiguity.</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Clear answers about multi-model routing, browser extension mechanics, and unified billing.
+          <p className="mt-3 text-base text-muted-foreground">
+            Everything you need to know about models, browser extension architecture, security, and billing.
           </p>
-        </div>
 
-        {/* FAQ Accordion */}
-        <div className="max-w-3xl mx-auto divide-y divide-border border-y border-border mb-24">
-          {FAQS.map((faq, index) => {
-            const isOpen = openIndex === index;
-            const itemId = `faq-item-${index}`;
-            const answerId = `faq-answer-${index}`;
-
-            return (
-              <div key={index} className="py-4">
-                <button
-                  type="button"
-                  id={itemId}
-                  aria-expanded={isOpen}
-                  aria-controls={answerId}
-                  onClick={() => toggleItem(index)}
-                  className="w-full flex items-center justify-between text-left py-2 group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg"
-                >
-                  <span className="text-base sm:text-lg font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors pr-4">
-                    {faq.question}
-                  </span>
-                  <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border border-border transition-all ${
-                      isOpen
-                        ? "bg-emerald-500 text-white border-emerald-500 rotate-180"
-                        : "bg-stone-100 dark:bg-stone-800 text-muted-foreground group-hover:border-stone-400"
-                    }`}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      id={answerId}
-                      role="region"
-                      aria-labelledby={itemId}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-2 pb-3 pr-8 text-sm sm:text-base text-muted-foreground leading-relaxed">
-                        {faq.answer}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Social Proof / Testimonials */}
-        <div className="pt-12 border-t border-border">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <Badge variant="outline" className="mb-3 text-stone-600 dark:text-stone-300 border-border bg-stone-100 dark:bg-stone-800 px-3 py-0.5 text-xs">
-              <Star className="w-3 h-3 text-amber-500 fill-amber-500 mr-1" />
-              Trusted by 10,000+ Engineers &amp; Researchers
-            </Badge>
-            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-              Loved by professionals who build with AI every day
-            </h3>
+          {/* Search Filter Bar */}
+          <div className="mt-8 relative max-w-md mx-auto">
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search questions (e.g. models, extension, privacy...)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-stone-50 dark:bg-stone-900/60 text-xs sm:text-sm text-foreground focus:outline-hidden focus:border-emerald-500/60 transition-colors"
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((testimonial, idx) => (
-              <Card
-                key={idx}
-                className="p-6 bg-card border-border hover:border-stone-400 dark:hover:border-stone-700 transition-all rounded-2xl flex flex-col justify-between shadow-xs relative"
+          {/* Category Filter Pills */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                  activeCategory === cat
+                    ? "bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-xs"
+                    : "bg-stone-100 dark:bg-stone-800/60 text-muted-foreground hover:text-foreground hover:bg-stone-200 dark:hover:bg-stone-800"
+                )}
               >
-                <div>
-                  {/* Rating stars */}
-                  <div className="flex items-center gap-1 mb-4 text-amber-500">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-500" />
-                    ))}
-                  </div>
-
-                  <p className="text-sm text-foreground leading-relaxed mb-6">
-                    &ldquo;{testimonial.content}&rdquo;
-                  </p>
-                </div>
-
-                <div className="border-t border-border pt-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground">{testimonial.name}</p>
-                      <p className="text-[11px] text-muted-foreground">{testimonial.role} • {testimonial.company}</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="text-[10px] text-stone-500 dark:text-stone-400 border-border bg-stone-100 dark:bg-stone-900 hidden sm:inline-flex">
-                    {testimonial.favoriteModel}
-                  </Badge>
-                </div>
-              </Card>
+                {cat}
+              </button>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
+
+        {/* FAQs Accordion with Scroll Reveal */}
+        <ScrollReveal yOffset={16} duration={0.48} delay={0.04} className="space-y-3">
+          {filteredFaqs.length === 0 ? (
+            <div className="p-8 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">
+              No matching questions found for &ldquo;{searchQuery}&rdquo;. Try another search term or category.
+            </div>
+          ) : (
+            filteredFaqs.map((faq) => {
+              const isOpen = openIds.includes(faq.id);
+              return (
+                <div
+                  key={faq.id}
+                  className={cn(
+                    "rounded-xl border transition-all overflow-hidden",
+                    isOpen
+                      ? "border-emerald-500/30 bg-stone-50/80 dark:bg-stone-900/50 shadow-xs"
+                      : "border-border bg-card hover:border-stone-400 dark:hover:border-stone-700"
+                  )}
+                >
+                  <button
+                    onClick={() => toggleAccordion(faq.id)}
+                    className="w-full text-left p-5 flex items-center justify-between gap-4 text-foreground focus:outline-hidden"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-stone-200/60 dark:bg-stone-800 text-muted-foreground font-semibold">
+                        {faq.category}
+                      </span>
+                      <span className="text-sm sm:text-base font-semibold leading-snug">
+                        {faq.question}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200",
+                        isOpen && "rotate-180 text-emerald-500"
+                      )}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed border-t border-border/50">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          )}
+        </ScrollReveal>
+
+        {/* Live Support / Inquiry Card with Scroll Reveal */}
+        <ScrollReveal yOffset={16} duration={0.48} delay={0.05} className="mt-12 p-6 rounded-2xl border border-border bg-stone-50/70 dark:bg-stone-900/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-foreground">Still have questions?</h4>
+              <p className="text-xs text-muted-foreground">
+                Join our developer Discord community or speak directly with our engineering team.
+              </p>
+            </div>
+          </div>
+          <Link href="/app">
+            <Button variant="outline" size="sm" className="text-xs font-semibold shrink-0 gap-1.5 cursor-pointer">
+              <span>Open Support Chat</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+          </Link>
+        </ScrollReveal>
       </div>
     </section>
   );
